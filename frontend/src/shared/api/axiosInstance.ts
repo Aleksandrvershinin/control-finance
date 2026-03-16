@@ -3,6 +3,9 @@ import { accessToken } from './accessToken.api'
 import { triggerLogout } from './logoutHandler'
 import { normalizeError } from '../lib/errors/normalizeError'
 
+export const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL as string
+export const PUBLIC_API_URL = `${PUBLIC_URL}/api`
+
 let refreshPromise: Promise<string> | null = null
 
 type RetryableAxiosConfig = {
@@ -10,10 +13,7 @@ type RetryableAxiosConfig = {
 }
 
 const axiosDefault = {
-    baseURL:
-        process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000/api'
-            : 'https://control-finance.top/api',
+    baseURL: PUBLIC_API_URL,
     timeout: 30000,
     withCredentials: true,
     headers: { 'Content-Type': 'application/json' },
