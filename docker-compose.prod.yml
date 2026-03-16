@@ -32,6 +32,7 @@ services:
       dockerfile: Dockerfile.prod
       args:
         VITE_RECAPTCHA_SITE_KEY: ${VITE_RECAPTCHA_SITE_KEY}
+        VITE_PUBLIC_URL: ${VITE_PUBLIC_URL}
     ports:
       - "127.0.0.1:4751:80"
     depends_on:

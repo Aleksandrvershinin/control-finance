@@ -24,6 +24,8 @@ services:
       - ./backend:/usr/src/app
     depends_on:
       - db
+    environment:
+      - PUBLIC_URL=${PUBLIC_URL}
     networks:
       - new-control-finance
     command: sh -c "npm ci && npm run start:dev"
@@ -38,6 +40,7 @@ services:
       - ./frontend:/usr/src/app # Монтируем фронтенд в контейнер
     environment:
       - NODE_ENV=development
+      - VITE_PUBLIC_URL=${VITE_PUBLIC_URL}
       - VITE_RECAPTCHA_SITE_KEY=${VITE_RECAPTCHA_SITE_KEY}
     command: /bin/bash -c "npm ci && npm run dev"
     networks:

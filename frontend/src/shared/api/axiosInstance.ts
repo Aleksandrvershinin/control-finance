@@ -5,6 +5,7 @@ import { normalizeError } from '../lib/errors/normalizeError'
 
 export const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL as string
 export const PUBLIC_API_URL = `${PUBLIC_URL}/api`
+console.log(import.meta.env)
 
 let refreshPromise: Promise<string> | null = null
 
