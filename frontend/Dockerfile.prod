@@ -3,13 +3,16 @@ FROM node:20 AS builder
 WORKDIR /usr/src/app
 
 ARG VITE_RECAPTCHA_SITE_KEY
+ARG VITE_PUBLIC_URL
 
 COPY package*.json ./
 RUN npm install --only=production
 
 COPY . ./
 RUN npm install typescript --save-dev
-RUN VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY npm run build
+RUN VITE_RECAPTCHA_SITE_KEY=$VITE_RECAPTCHA_SITE_KEY \
+    VITE_PUBLIC_URL=$VITE_PUBLIC_URL \
+    npm run build
 
 
 FROM nginx:alpine
