@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     ports:
-      - "127.0.0.1:4770:3000"
+      - "127.0.0.1:4771:3000"
       - "127.0.0.1:5555:5555"
     depends_on:
       - db
@@ -33,7 +33,7 @@ services:
       args:
         VITE_RECAPTCHA_SITE_KEY: ${VITE_RECAPTCHA_SITE_KEY}
     ports:
-      - "127.0.0.1:4750:80"
+      - "127.0.0.1:4751:80"
     depends_on:
       - backend
     networks:
