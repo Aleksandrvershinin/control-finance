@@ -1,0 +1,30 @@
+FROM node:20 AS builder
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Устанавливаем NestJS CLI глобально
+RUN npm install -g @nestjs/cli
+
+COPY . ./
+RUN npx prisma generate
+RUN npm run build
+# Используем легковесный образ для продакшена
+FROM node:20-slim
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/prisma ./prisma
+
+COPY package*.json ./
+
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
+    && apt-get install -y --no-install-recommends libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+EXPOSE 3000
+
+CMD ["node", "dist/src/main"]

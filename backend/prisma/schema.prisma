@@ -1,0 +1,204 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+//////////////////////////////////////////////////////
+// ENUMS
+//////////////////////////////////////////////////////
+
+enum TransactionType {
+    INITIAL
+    INCOME
+    EXPENSE
+    TRANSFER
+}
+
+enum CategoryType {
+    INCOME
+    EXPENSE
+}
+
+//////////////////////////////////////////////////////
+// SYSTEM
+//////////////////////////////////////////////////////
+
+model CodeThrottle {
+    id        String   @id @default(uuid())
+    ip        String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([ip])
+}
+
+//////////////////////////////////////////////////////
+// USER
+//////////////////////////////////////////////////////
+
+model User {
+    id                String    @id @default(uuid())
+    email             String    @unique
+    password          String
+    loginCodeHash     String?
+    loginCodeExpire   DateTime?
+    loginAttempts     Int       @default(0)
+    loginBlockedUntil DateTime?
+
+    currencyId String?
+    currency   Currency? @relation(fields: [currencyId], references: [id])
+
+    accounts   Account[]
+    funds      Fund[]
+    categories Category[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////
+// CURRENCY
+//////////////////////////////////////////////////////
+
+model Currency {
+    id     String @id @default(uuid())
+    code   String @unique
+    name   String
+    symbol String @default("")
+
+    users User[]
+}
+
+//////////////////////////////////////////////////////
+// ACCOUNT
+//////////////////////////////////////////////////////
+
+model Account {
+    id             String  @id @default(uuid())
+    name           String
+    order          Int     @default(0)
+    initialBalance Decimal @default(0)
+    userId         String
+    user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    accountFundBalances AccountFundBalance[]
+    ledgerEntries       LedgerEntry[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name])
+    @@unique([id, userId])
+    @@index([userId])
+}
+
+//////////////////////////////////////////////////////
+// FUND
+//////////////////////////////////////////////////////
+
+model Fund {
+    id      String @id @default(uuid())
+    name    String
+    colorBg String @default("#ffffff")
+    order   Int    @default(0)
+    userId  String
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    accountFundBalances AccountFundBalance[]
+    ledgerEntries       LedgerEntry[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name])
+    @@unique([id, userId])
+    @@index([userId])
+}
+
+//////////////////////////////////////////////////////
+// CATEGORY
+//////////////////////////////////////////////////////
+
+model Category {
+    id   String @id @default(uuid())
+    name String
+
+    type CategoryType
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    transactions Transaction[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([userId, name, type])
+    @@index([userId])
+}
+
+//////////////////////////////////////////////////////
+// TRANSACTION
+//////////////////////////////////////////////////////
+
+model Transaction {
+    id String @id @default(uuid())
+
+    type        TransactionType
+    amount      Decimal
+    description String?
+    date        DateTime
+
+    categoryId String?
+    category   Category? @relation(fields: [categoryId], references: [id])
+
+    entries LedgerEntry[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([date])
+}
+
+model LedgerEntry {
+    id String @id @default(uuid())
+
+    transactionId String
+    transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+    accountId String
+    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+    fundId String?
+    fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+    amount Decimal
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([accountId])
+    @@index([fundId])
+    @@index([transactionId])
+}
+
+model AccountFundBalance {
+    id        String  @id @default(uuid())
+    accountId String
+    fundId    String?
+
+    account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    fund    Fund?   @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+    balance Decimal @default(0)
+
+    updatedAt DateTime @updatedAt
+
+    @@index([accountId, fundId])
+    @@index([accountId])
+    @@index([fundId])
+}

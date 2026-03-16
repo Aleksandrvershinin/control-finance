@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:15
+    networks:
+    - new-control-finance
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - new_control_finance_postgres_data:/var/lib/postgresql/data
+    restart: ${RESTART_POLICY}
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:4770:3000"
+      - "127.0.0.1:5555:5555"
+    depends_on:
+      - db
+    networks:
+      - new-control-finance
+    restart: ${RESTART_POLICY}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_RECAPTCHA_SITE_KEY: ${VITE_RECAPTCHA_SITE_KEY}
+    ports:
+      - "127.0.0.1:4750:80"
+    depends_on:
+      - backend
+    networks:
+      - new-control-finance
+    restart: ${RESTART_POLICY}
+
+volumes:
+  new_control_finance_postgres_data:
+
+networks:
+  new-control-finance:
+    driver: bridge
