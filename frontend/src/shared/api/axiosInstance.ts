@@ -13,7 +13,11 @@ type RetryableAxiosConfig = {
 }
 
 const axiosDefault = {
-    baseURL: PUBLIC_API_URL,
+    baseURL:
+        process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000/api'
+            : PUBLIC_API_URL,
+    PUBLIC_API_URL,
     timeout: 30000,
     withCredentials: true,
     headers: { 'Content-Type': 'application/json' },
