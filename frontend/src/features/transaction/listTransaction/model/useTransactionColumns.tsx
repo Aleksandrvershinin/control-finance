@@ -4,7 +4,7 @@ import { useGetCurrencyById } from '@/entities/currency'
 import { useGetFundById } from '@/entities/fund'
 import { getTransactionTypeMeta, Transaction } from '@/entities/transaction'
 import { formatCurrency } from '@/shared/lib/utils/formatCurrency'
-import { DeleteButton } from '@/shared/ui'
+import { DeleteButton, Stack } from '@/shared/ui'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react'
 import { useDeleteTransactionDialogStore } from '../../deleteTransaction'
@@ -205,7 +205,7 @@ export const useTransactionColumns = ({
                 const transaction = row.original
 
                 return (
-                    <div className="space-x-2">
+                    <Stack spacing={2}>
                         <EditTransactionBtn
                             title="Редактировать транзакцию"
                             transaction={transaction}
@@ -214,7 +214,7 @@ export const useTransactionColumns = ({
                             title="Удалить транзакцию"
                             onClick={() => openDelete(transaction.id)}
                         />
-                    </div>
+                    </Stack>
                 )
             },
         },
