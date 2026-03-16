@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "seed": "node prisma/seed.js",
-    "rebuildBalances": "node scripts/rebuildBalances.js",
+    "seed": "ts-node prisma/seed.ts",
+    "rebuildBalances": "ts-node scripts/rebuildBalances.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
