@@ -17,14 +17,16 @@ export const AccountFundsList = ({ account, renderFundCard }: Props) => {
                 return <li key={fund.id}>{renderFundCard(fund)}</li>
             })}
 
-            <li key={'witOutFund'}>
-                {renderFundCard({
-                    name: 'Без фонда',
-                    id: 'witOutFund',
-                    balance: balanceWithoutFunds,
-                    colorBg: '',
-                })}
-            </li>
+            {balanceWithoutFunds !== 0 && (
+                <li key={'witOutFund'}>
+                    {renderFundCard({
+                        name: 'Без фонда',
+                        id: 'witOutFund',
+                        balance: balanceWithoutFunds,
+                        colorBg: '',
+                    })}
+                </li>
+            )}
         </ul>
     )
 }
