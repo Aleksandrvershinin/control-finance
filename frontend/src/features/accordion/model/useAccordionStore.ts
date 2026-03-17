@@ -15,6 +15,7 @@ export const useAccordionStore = create<AccordionState>()(
                 main_filters: 'main_filters',
                 accounts: 'accounts',
                 hidden_accounts: undefined,
+                funds_in_accounts: 'funds_in_accounts',
                 funds: 'funds',
                 transactions: 'transactions',
             },
