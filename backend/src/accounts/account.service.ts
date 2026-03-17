@@ -37,6 +37,7 @@ export class AccountService {
                 data: {
                     name: dto.name,
                     order: dto.order,
+                    isHidden: dto.isHidden,
                     initialBalance: Math.abs(dto.initialBalance),
                     userId,
                 },
@@ -104,7 +105,10 @@ export class AccountService {
             }
         }
 
-        const hasUpdates = dto.name !== undefined || dto.order !== undefined
+        const hasUpdates =
+            dto.name !== undefined ||
+            dto.order !== undefined ||
+            dto.isHidden !== undefined
 
         if (!hasUpdates) {
             const account = await this.prisma.account.findUniqueOrThrow({
@@ -127,6 +131,9 @@ export class AccountService {
             data: {
                 ...(dto.name !== undefined ? { name: dto.name } : {}),
                 ...(dto.order !== undefined ? { order: dto.order } : {}),
+                ...(dto.isHidden !== undefined
+                    ? { isHidden: dto.isHidden }
+                    : {}),
             },
             include: {
                 accountFundBalances: {

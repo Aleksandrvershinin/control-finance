@@ -81,6 +81,7 @@ model Account {
     id             String  @id @default(uuid())
     name           String
     order          Int     @default(0)
+    isHidden       Boolean @default(false)
     initialBalance Decimal @default(0)
     userId         String
     user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -9,6 +9,7 @@ interface AccountCardProps {
     incomeAction?: React.ReactNode
     expenseAction?: React.ReactNode
     transferAction?: React.ReactNode
+    visibilityAction?: React.ReactNode
     editAction?: React.ReactNode
     deleteAction?: React.ReactNode
     funds?: React.ReactNode
@@ -21,6 +22,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
     incomeAction,
     expenseAction,
     transferAction,
+    visibilityAction,
     editAction,
     deleteAction,
     funds,
@@ -65,6 +67,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                         <div>{transferAction}</div>
                     </Stack>
                     <Stack>
+                        <div>{visibilityAction}</div>
                         <div>{editAction}</div>
                         <div>{deleteAction}</div>
                     </Stack>

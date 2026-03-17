@@ -4,6 +4,7 @@ export const accountSchema = z.object({
     id: z.string(),
     name: z.string(),
     order: z.number(),
+    isHidden: z.boolean(),
     initialBalance: z.number(),
     balance: z.number().optional(),
     currencyId: z.string(),
@@ -23,11 +24,19 @@ export const createAccountDTOSchema = accountSchema.omit({
     balance: true,
     funds: true,
     currencyId: true,
+    isHidden: true,
 })
 
-export const updateAccountDTOSchema = createAccountDTOSchema.omit({
-    initialBalance: true,
-})
+export const createAccountDTOSchemaWithOptionalHidden =
+    createAccountDTOSchema.extend({
+        isHidden: z.boolean().optional(),
+    })
+
+export const updateAccountDTOSchema = createAccountDTOSchemaWithOptionalHidden
+    .omit({
+        initialBalance: true,
+    })
+    .partial()
 
 export const reorderAccountItemSchema = z.object({
     id: z.string(),
@@ -39,6 +48,8 @@ export const reorderAccountsDTOSchema = z.object({
 })
 
 export type Account = z.infer<typeof accountSchema>
-export type CreateAccountDto = z.infer<typeof createAccountDTOSchema>
+export type CreateAccountDto = z.infer<
+    typeof createAccountDTOSchemaWithOptionalHidden
+>
 export type UpdateAccountDto = z.infer<typeof updateAccountDTOSchema>
 export type ReorderAccountsDto = z.infer<typeof reorderAccountsDTOSchema>

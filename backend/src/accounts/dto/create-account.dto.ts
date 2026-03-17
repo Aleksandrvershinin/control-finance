@@ -1,4 +1,10 @@
-import { IsInt, IsOptional, IsString, MinLength } from 'class-validator'
+import {
+    IsBoolean,
+    IsInt,
+    IsOptional,
+    IsString,
+    MinLength,
+} from 'class-validator'
 
 export class CreateAccountDto {
     @IsString()
@@ -11,4 +17,8 @@ export class CreateAccountDto {
     @IsOptional()
     @IsInt()
     order?: number
+
+    @IsOptional()
+    @IsBoolean()
+    isHidden?: boolean
 }

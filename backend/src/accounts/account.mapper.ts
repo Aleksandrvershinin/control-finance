@@ -24,6 +24,7 @@ export function mapAccount(account: AccountWithRelations) {
         id: account.id,
         name: account.name,
         order: account.order,
+        isHidden: account.isHidden,
         balance: totalBalance,
         initialBalance: account.initialBalance.toNumber(),
         currencyId: account.user.currencyId,

@@ -17,6 +17,9 @@ export class ResponseAccountDto {
     initialBalance: number
 
     @Expose()
+    isHidden: boolean
+
+    @Expose()
     currencyId: string
 
     @Expose()

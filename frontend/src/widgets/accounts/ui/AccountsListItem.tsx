@@ -2,6 +2,7 @@ import { AccountCard, AccountFundsList, Account } from '@/entities/account'
 import { FundCard } from '@/entities/fund'
 import { DeleteAccountButton } from '@/features/account/deleteAccount'
 import { EditAccountButton } from '@/features/account/updateAccount'
+import { ToggleAccountVisibilityButton } from '@/features/account'
 import { TransactionCreateButton } from '@/features/transaction/createTransaction'
 
 type AccountsListItemProps = {
@@ -38,6 +39,12 @@ export const AccountsListItem = ({
                 <TransactionCreateButton
                     action="TRANSFER"
                     accountId={account.id}
+                />
+            }
+            visibilityAction={
+                <ToggleAccountVisibilityButton
+                    accountId={account.id}
+                    isHidden={account.isHidden}
                 />
             }
             editAction={<EditAccountButton account={account} />}

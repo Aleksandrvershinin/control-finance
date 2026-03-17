@@ -12,6 +12,7 @@ import { useSuspensCurrentUser } from '@/entities/user'
 import { useGetCurrencyById } from '@/entities/currency'
 import { AccountsTotalCard } from './AccountsTotalCard'
 import { SortableAccountsList } from './SortableAccountsList'
+import { HiddenAccountsSection } from './HiddenAccountsSection'
 import { useMainFilterStore } from '@/features/mainFilter'
 import { ACCORDION_KEYS, useAccordion } from '@/features/accordion'
 import {
@@ -36,9 +37,12 @@ export const Accounts = () => {
     const filteredAccounts = accountIds?.length
         ? accounts.filter((acc) => accountIds.includes(acc.id))
         : accounts
+    const visibleAccounts = filteredAccounts.filter((acc) => !acc.isHidden)
+    const hiddenAccounts = accounts.filter((acc) => acc.isHidden)
     const getCurrencyById = useGetCurrencyById()
     const currency = getCurrencyById(user?.currencyId)
-    const total = getAccountsTotal(filteredAccounts)
+    const total = getAccountsTotal(visibleAccounts)
+
     return (
         <>
             <CreateAccountDialog />
@@ -66,8 +70,13 @@ export const Accounts = () => {
                                 isFetching={isFetching}
                             />
                             <SortableAccountsList
-                                accounts={filteredAccounts}
+                                accounts={visibleAccounts}
                                 isFetching={isFetching}
+                                currencyCode={currency.code}
+                                currencySymbol={currency.symbol}
+                            />
+                            <HiddenAccountsSection
+                                accounts={hiddenAccounts}
                                 currencyCode={currency.code}
                                 currencySymbol={currency.symbol}
                             />
