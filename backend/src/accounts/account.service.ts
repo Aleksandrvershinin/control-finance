@@ -3,6 +3,8 @@ import {
     BadRequestException,
     NotFoundException,
     InternalServerErrorException,
+    Inject,
+    forwardRef,
 } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateAccountDto } from './dto/create-account.dto'
@@ -15,6 +17,7 @@ import { TransactionsService } from 'src/transactions/transactions.service'
 export class AccountService {
     constructor(
         private prisma: PrismaService,
+        @Inject(forwardRef(() => TransactionsService))
         private transactionService: TransactionsService,
     ) {}
 
