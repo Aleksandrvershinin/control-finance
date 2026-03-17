@@ -1,4 +1,5 @@
 export const ACCORDION_KEYS = {
+    FUNDS_IN_ACCOUNTS: 'funds_in_accounts',
     FUNDS: 'funds',
     ACCOUNTS: 'accounts',
     HIDDEN_ACCOUNTS: 'hidden_accounts',

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Account } from '../model/account.types'
 import { Stack } from '@/shared/ui/Stack'
-import { Separator } from '@/shared/ui'
 import { formatCurrency } from '@/shared/lib/utils/formatCurrency'
 
 interface AccountCardProps {
@@ -52,13 +51,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                     </div>
                     <div className="text-sm font-semibold">{currencyCode}</div>
                 </Stack>
-                {funds && (
-                    <>
-                        <Separator />
-                        <div className="font-semibold">Фонды</div>
-                        {funds}
-                    </>
-                )}
+                {funds}
 
                 <Stack justify={'between'} align={'center'} spacing={2}>
                     <Stack>
