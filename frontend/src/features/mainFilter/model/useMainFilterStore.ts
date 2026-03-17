@@ -64,6 +64,9 @@ export const useMainFilterStore = create<MainFilterState>()(
                     cursor: undefined,
                     cursorHistory: [],
                 }),
+            handleError: () => {
+                get().resetFilters()
+            },
         }),
         { name: 'main-filter-store' },
     ),
