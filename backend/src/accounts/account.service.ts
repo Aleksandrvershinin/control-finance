@@ -8,14 +8,14 @@ import { PrismaService } from '../prisma/prisma.service'
 import { CreateAccountDto } from './dto/create-account.dto'
 import { UpdateAccountDto } from './dto/update-account.dto'
 import { ReorderAccountsDto } from './dto/reorderAccounts.dto'
-import { LedgerService } from 'src/ledger/ledger.service'
 import { mapAccount } from './account.mapper'
+import { TransactionsService } from 'src/transactions/transactions.service'
 
 @Injectable()
 export class AccountService {
     constructor(
         private prisma: PrismaService,
-        private ledgerService: LedgerService,
+        private transactionService: TransactionsService,
     ) {}
 
     async create(userId: string, dto: CreateAccountDto) {
@@ -48,22 +48,13 @@ export class AccountService {
             })
 
             if (dto.initialBalance !== 0) {
-                const transaction = await tx.transaction.create({
-                    data: {
-                        type: 'INITIAL',
-                        date: new Date(),
-                        amount: dto.initialBalance,
-                        description: 'Начальный баланс',
-                    },
+                await this.transactionService.createTx(tx, userId, {
+                    type: 'INITIAL',
+                    amount: dto.initialBalance,
+                    description: 'Начальный баланс',
+                    date: new Date().toISOString(),
+                    accountId: account.id,
                 })
-
-                await this.ledgerService.createEntries(tx, [
-                    {
-                        transactionId: transaction.id,
-                        accountId: account.id,
-                        amount: dto.initialBalance,
-                    },
-                ])
             }
 
             return mapAccount(account)

@@ -3,6 +3,17 @@ import { LedgerEntry, Prisma } from '@prisma/client'
 
 @Injectable()
 export class BalancesService {
+    async revert(
+        prisma: Prisma.TransactionClient,
+        entry: Pick<LedgerEntry, 'accountId' | 'fundId' | 'amount'>,
+    ) {
+        await this.applyEntry(prisma, {
+            accountId: entry.accountId,
+            fundId: entry.fundId,
+            amount: new Prisma.Decimal(entry.amount).mul(-1),
+        })
+    }
+
     async applyEntry(
         tx: Prisma.TransactionClient,
         entry: Pick<LedgerEntry, 'accountId' | 'fundId' | 'amount'>,

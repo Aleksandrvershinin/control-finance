@@ -20,42 +20,51 @@ export class TransactionsService {
         private prisma: PrismaService,
         private ledgerService: LedgerService,
     ) {}
+    async createTx(
+        tx: Prisma.TransactionClient,
+        userId: string,
+        dto: Omit<
+            CreateTransactionDto,
+            'type' | 'categoryId' | 'toAccountId'
+        > & {
+            type: TransactionType
+            categoryId?: string
+            toAccountId?: string
+        },
+    ) {
+        await this.assertAccountOwnership(tx, userId, dto.accountId)
+        await this.assertAccountOwnership(tx, userId, dto.toAccountId)
 
-    create(userId: string, dto: CreateTransactionDto) {
-        return this.prisma.$transaction(async (tx) => {
-            // Проверяем право владения исходным аккаунтом
-            await this.assertAccountOwnership(tx, userId, dto.accountId)
-            await this.assertAccountOwnership(tx, userId, dto.toAccountId)
+        await this.assertFundOwnership(tx, userId, dto.fundId)
+        await this.assertFundOwnership(tx, userId, dto.toFundId)
 
-            await this.assertFundOwnership(tx, userId, dto.fundId)
-            await this.assertFundOwnership(tx, userId, dto.toFundId)
-            const amount = this.calculateAmount(dto.type, dto.amount)
-            const transaction = await tx.transaction.create({
-                data: {
-                    amount,
-                    type: dto.type,
-                    description: dto.description,
-                    date: new Date(dto.date),
-                    categoryId: dto.categoryId,
-                },
-            })
+        const amount = this.calculateAmount(dto.type, dto.amount)
 
-            const entries = this.buildLedgerEntries({
-                transactionId: transaction.id,
-                type: dto.type,
-                accountId: dto.accountId,
-                fundId: dto.fundId,
+        const transaction = await tx.transaction.create({
+            data: {
                 amount,
-                toAccountId: dto.toAccountId,
-                toFundId: dto.toFundId,
-            })
-
-            const createdEntries = await this.ledgerService.createEntries(
-                tx,
-                entries,
-            )
-            return mapTransaction(transaction, createdEntries)
+                type: dto.type,
+                description: dto.description,
+                date: new Date(dto.date),
+                categoryId: dto.categoryId,
+            },
         })
+
+        const createdEntries = await this.ledgerService.createLedgerEntries({
+            prisma: tx,
+            transactionId: transaction.id,
+            type: dto.type,
+            accountId: dto.accountId,
+            fundId: dto.fundId,
+            amount,
+            toAccountId: dto.toAccountId,
+            toFundId: dto.toFundId,
+        })
+
+        return mapTransaction(transaction, createdEntries)
+    }
+    create(userId: string, dto: CreateTransactionDto) {
+        return this.prisma.$transaction((tx) => this.createTx(tx, userId, dto))
     }
 
     async update(
@@ -116,24 +125,19 @@ export class TransactionsService {
                 },
             })
 
-            await this.ledgerService.revertEntries(tx, current.entries)
-            await tx.ledgerEntry.deleteMany({
-                where: { transactionId },
-            })
+            await this.ledgerService.revert(tx, current.entries)
 
-            const entries = this.buildLedgerEntries({
-                transactionId,
-                type,
-                accountId,
-                fundId,
-                amount,
-                toAccountId,
-                toFundId,
-            })
-
-            const createdEntries = await this.ledgerService.createEntries(
-                tx,
-                entries,
+            const createdEntries = await this.ledgerService.createLedgerEntries(
+                {
+                    prisma: tx,
+                    transactionId,
+                    type,
+                    accountId,
+                    fundId,
+                    amount,
+                    toAccountId,
+                    toFundId,
+                },
             )
 
             return mapTransaction(transaction, createdEntries)
@@ -160,7 +164,7 @@ export class TransactionsService {
                 ),
             )
 
-            await this.ledgerService.revertEntries(tx, current.entries)
+            await this.ledgerService.revert(tx, current.entries)
             await tx.transaction.delete({
                 where: { id: transactionId },
             })
@@ -246,61 +250,7 @@ export class TransactionsService {
 
     private calculateAmount(type: TransactionType, amount: number) {
         if (type === TransactionType.INITIAL) return amount
-
-        const value = Math.abs(amount)
-        return type === TransactionType.EXPENSE ? -value : value
-    }
-
-    private buildLedgerEntries({
-        transactionId,
-        type,
-        accountId,
-        fundId,
-        amount,
-        toAccountId,
-        toFundId,
-    }: {
-        transactionId: string
-        type: TransactionType
-        accountId: string
-        fundId: string | null | undefined
-        amount: number
-        toAccountId?: string
-        toFundId?: string | null
-    }) {
-        const entries: {
-            transactionId: string
-            accountId: string
-            fundId?: string
-            amount: number
-        }[] = [
-            {
-                transactionId,
-                accountId,
-                fundId: fundId ?? undefined,
-                amount:
-                    type === TransactionType.TRANSFER
-                        ? -Math.abs(amount)
-                        : amount,
-            },
-        ]
-
-        if (type === TransactionType.TRANSFER) {
-            if (!toAccountId) {
-                throw new BadRequestException(
-                    'toAccountId is required for transfer transaction',
-                )
-            }
-
-            entries.push({
-                transactionId,
-                accountId: toAccountId,
-                fundId: toFundId ?? undefined,
-                amount: Math.abs(amount),
-            })
-        }
-
-        return entries
+        return Math.abs(amount)
     }
 
     private async assertAccountOwnership(tx: Tx, userId: string, id?: string) {
