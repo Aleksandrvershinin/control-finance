@@ -1,33 +1,28 @@
 import { LoginByCodeForm, LoginByPassForm } from '@/features/auth/login'
 import { Button } from '@/shared/ui'
 import { Stack } from '@/shared/ui/Stack'
+import { AuthFormLayout } from '@/widgets/authFormLayout'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 
 export const LoginPage = () => {
     return (
-        <section>
-            <div className="container">
-                <Stack
-                    direction={'column'}
-                    className="rounded-lg shadow-2xl w-96 p-4 mt-20 mx-auto bg-white"
-                >
-                    <h1 className="text-2xl font-semibold mb-4 text-center">
-                        Авторизация
-                    </h1>
-                    <LoginPageSwitch />
-                    <Stack justify={'center'} spacing={2}>
-                        <p>Нет аккаунта?</p>
-                        <Link
-                            className="link"
-                            to={'/register'}
-                            data-discover="true"
-                        >
-                            Зарегистрироваться
-                        </Link>
-                    </Stack>
+        <AuthFormLayout
+            title="Авторизация"
+            footer={
+                <Stack justify={'center'} spacing={2}>
+                    <p>Нет аккаунта?</p>
+                    <Link
+                        className="link"
+                        to={'/register'}
+                        data-discover="true"
+                    >
+                        Зарегистрироваться
+                    </Link>
                 </Stack>
-            </div>
-        </section>
+            }
+        >
+            <LoginPageSwitch />
+        </AuthFormLayout>
     )
 }
 
