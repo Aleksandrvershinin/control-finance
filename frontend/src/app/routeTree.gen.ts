@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as authenticatedRouteRouteImport } from './routes/(authenticated)/route'
 import { Route as authenticatedFundsRouteImport } from './routes/(authenticated)/funds'
 import { Route as authenticatedCategoriesRouteImport } from './routes/(authenticated)/categories'
+import { Route as authenticatedAnalyticsRouteImport } from './routes/(authenticated)/analytics'
 
 const authenticatedIndexLazyRouteImport = createFileRoute('/(authenticated)/')()
 
@@ -52,10 +53,16 @@ const authenticatedCategoriesRoute = authenticatedCategoriesRouteImport.update({
   path: '/categories',
   getParentRoute: () => authenticatedRouteRoute,
 } as any)
+const authenticatedAnalyticsRoute = authenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => authenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/analytics': typeof authenticatedAnalyticsRoute
   '/categories': typeof authenticatedCategoriesRoute
   '/funds': typeof authenticatedFundsRoute
   '/': typeof authenticatedIndexLazyRoute
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/analytics': typeof authenticatedAnalyticsRoute
   '/categories': typeof authenticatedCategoriesRoute
   '/funds': typeof authenticatedFundsRoute
   '/': typeof authenticatedIndexLazyRoute
@@ -72,20 +80,28 @@ export interface FileRoutesById {
   '/(authenticated)': typeof authenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/(authenticated)/analytics': typeof authenticatedAnalyticsRoute
   '/(authenticated)/categories': typeof authenticatedCategoriesRoute
   '/(authenticated)/funds': typeof authenticatedFundsRoute
   '/(authenticated)/': typeof authenticatedIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/categories' | '/funds' | '/'
+  fullPaths:
+    | '/login'
+    | '/register'
+    | '/analytics'
+    | '/categories'
+    | '/funds'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/categories' | '/funds' | '/'
+  to: '/login' | '/register' | '/analytics' | '/categories' | '/funds' | '/'
   id:
     | '__root__'
     | '/(authenticated)'
     | '/login'
     | '/register'
+    | '/(authenticated)/analytics'
     | '/(authenticated)/categories'
     | '/(authenticated)/funds'
     | '/(authenticated)/'
@@ -141,16 +157,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authenticatedCategoriesRouteImport
       parentRoute: typeof authenticatedRouteRoute
     }
+    '/(authenticated)/analytics': {
+      id: '/(authenticated)/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof authenticatedAnalyticsRouteImport
+      parentRoute: typeof authenticatedRouteRoute
+    }
   }
 }
 
 interface authenticatedRouteRouteChildren {
+  authenticatedAnalyticsRoute: typeof authenticatedAnalyticsRoute
   authenticatedCategoriesRoute: typeof authenticatedCategoriesRoute
   authenticatedFundsRoute: typeof authenticatedFundsRoute
   authenticatedIndexLazyRoute: typeof authenticatedIndexLazyRoute
 }
 
 const authenticatedRouteRouteChildren: authenticatedRouteRouteChildren = {
+  authenticatedAnalyticsRoute: authenticatedAnalyticsRoute,
   authenticatedCategoriesRoute: authenticatedCategoriesRoute,
   authenticatedFundsRoute: authenticatedFundsRoute,
   authenticatedIndexLazyRoute: authenticatedIndexLazyRoute,

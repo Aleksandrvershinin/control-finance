@@ -1,5 +1,6 @@
 export const pathKeys = {
     home: '/',
+    analytics: '/analytics',
     login: '/login',
     register: '/register',
     error: '/error',

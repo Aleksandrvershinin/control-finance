@@ -6,6 +6,7 @@ export type NavigationItem = {
 }
 export const NAVIGATION_ITEMS: NavigationItem[] = [
     { path: '/', label: 'Домой' },
+    { path: '/analytics', label: 'Аналитика' },
     { path: '/funds', label: 'Фонды' },
     { path: '/categories', label: 'Категории' },
 ]

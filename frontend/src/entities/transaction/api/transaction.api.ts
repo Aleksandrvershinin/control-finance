@@ -7,6 +7,7 @@ import {
 import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 import { TransactionQueryParamsDto } from '../model/transactionQueryParams.types'
 import { transactionsListResponseSchema } from '../model/transactionListResponse.types'
+import { transactionAnalyticsSchema } from '../model/transactionAnalytics.types'
 import { transactionSummarySchema } from '../model/transactionSummary.types'
 import * as qs from 'qs'
 
@@ -20,6 +21,11 @@ export const TRANSACTION_LIST_QUERY_KEY = [
 export const TRANSACTION_SUMMARY_QUERY_KEY = [
     ...ROOT_TRANSACTION_QUERY_KEY,
     'summary',
+]
+
+export const TRANSACTION_ANALYTICS_QUERY_KEY = [
+    ...ROOT_TRANSACTION_QUERY_KEY,
+    'analytics',
 ]
 
 export const transactionApi = {
@@ -66,6 +72,33 @@ export const transactionApi = {
                     signal,
                 })
                 return transactionSummarySchema.parse(data.data || data)
+            },
+            placeholderData: keepPreviousData,
+        })
+    },
+
+    getAnalytics: (
+        params: TransactionQueryParamsDto,
+        config?: AxiosRequestConfig,
+    ) => {
+        return apiAxiosWithAuthToken.get('/transactions/analytics', {
+            ...config,
+            params,
+            paramsSerializer: (params) =>
+                qs.stringify(params, { arrayFormat: 'repeat' }),
+        })
+    },
+
+    getTransactionsAnalyticsQueryOptions: (
+        params: TransactionQueryParamsDto,
+    ) => {
+        return queryOptions({
+            queryKey: [...TRANSACTION_ANALYTICS_QUERY_KEY, params],
+            queryFn: async ({ signal }) => {
+                const { data } = await transactionApi.getAnalytics(params, {
+                    signal,
+                })
+                return transactionAnalyticsSchema.parse(data.data || data)
             },
             placeholderData: keepPreviousData,
         })
