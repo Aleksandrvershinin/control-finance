@@ -30,6 +30,19 @@ export class MailService {
         this.logger.log(`Login code sent to ${email}`)
     }
 
+    async sendChangePasswordCode(email: string, code: string): Promise<void> {
+        const html = this.buildChangePasswordCodeTemplate(code)
+
+        await this.transporter.sendMail({
+            from: process.env.MAIL_FROM,
+            to: email,
+            subject: 'Your password change code',
+            html,
+        })
+
+        this.logger.log(`Password change code sent to ${email}`)
+    }
+
     private buildLoginCodeTemplate(code: string): string {
         return `
             <div style="font-family: Arial, sans-serif; line-height: 1.6">
@@ -45,6 +58,25 @@ export class MailService {
                 </div>
                 <p>This code is valid for 10 minutes.</p>
                 <p>If you didn’t request this, just ignore this email.</p>
+            </div>
+        `
+    }
+
+    private buildChangePasswordCodeTemplate(code: string): string {
+        return `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6">
+                <h2>Password change code</h2>
+                <p>Use this one-time code to confirm changing your password:</p>
+                <div style="
+                    font-size: 24px;
+                    font-weight: bold;
+                    letter-spacing: 4px;
+                    margin: 16px 0;
+                ">
+                    ${code}
+                </div>
+                <p>This code is valid for 10 minutes.</p>
+                <p>If you didn’t request this, please secure your account.</p>
             </div>
         `
     }

@@ -7,7 +7,8 @@ export interface MenuStyleConfig {
 
 const MENU_VARIANTS: Record<MenuVariant, MenuStyleConfig> = {
     header: {
-        container: 'flex items-center gap-x-4',
+        container:
+            'flex flex-wrap items-center gap-x-3 gap-y-2 sm:flex-nowrap sm:gap-x-4',
         item: '',
     },
     footer: {

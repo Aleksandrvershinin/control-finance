@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { House } from 'lucide-react'
 import { NavigationItem } from '../config/navigationItems'
 import { MenuVariant } from '../config/menuVariants'
 
@@ -9,7 +10,7 @@ type MenuItemStyleConfig = {
 
 const MENU_ITEM_VARIANTS: Record<MenuVariant, MenuItemStyleConfig> = {
     header: {
-        link: 'font-semibold transition-colors duration-300 ease-in-out hover:text-[var(--primary-400)]',
+        link: 'block h-[24px] font-semibold transition-colors duration-300 ease-in-out hover:text-[var(--primary-400)]',
         activeLink: 'text-[var(--primary-500)] poinivent-none',
     },
     footer: {
@@ -30,6 +31,7 @@ interface MenuItemProps {
 
 export function MenuItem({ item, variant = 'header' }: MenuItemProps) {
     const styles = MENU_ITEM_VARIANTS[variant]
+    const isHomeItem = item.path === '/'
 
     return (
         <Link
@@ -38,8 +40,16 @@ export function MenuItem({ item, variant = 'header' }: MenuItemProps) {
                 className: `${styles.activeLink} pointer-events-none`,
             }}
             className={styles.link}
+            aria-label={item.label}
+            title={item.label}
         >
-            {item.label}
+            {isHomeItem ? (
+                <>
+                    <House aria-hidden="true" className="inline-block h-full" />
+                </>
+            ) : (
+                item.label
+            )}
         </Link>
     )
 }

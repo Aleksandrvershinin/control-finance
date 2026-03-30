@@ -1,10 +1,20 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Patch,
+    UseGuards,
+} from '@nestjs/common'
 import { UsersService } from './users.service'
-import { CreateUserDto } from './dto/create-user.dto'
 import { plainToClass } from 'class-transformer'
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { Auth } from 'src/common/decorators/auth.decorator'
 import { ResponseUserDto } from './dto/response-user.dto'
+import { RequestChangePasswordCodeDto } from './dto/request-change-password-code.dto'
+import { ConfirmChangePasswordDto } from './dto/confirm-change-password.dto'
+import { RecaptchaGuard } from 'src/recaptcha/recaptcha.guard'
+import { Recaptcha } from 'src/recaptcha/recaptcha.decorator'
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +35,29 @@ export class UsersController {
                 excludeExtraneousValues: true,
             }),
         }
+    }
+
+    @UseGuards(JwtAuthGuard, RecaptchaGuard)
+    @Recaptcha('changePasswordCodeRequest')
+    @Post('password/code/request')
+    async requestChangePasswordCode(
+        @Auth('userId') userId: string,
+        @Body() _dto: RequestChangePasswordCodeDto,
+    ) {
+        return this.usersService.requestChangePasswordCode(userId)
+    }
+
+    @UseGuards(JwtAuthGuard, RecaptchaGuard)
+    @Recaptcha('changePasswordConfirm')
+    @Patch('password')
+    async changePassword(
+        @Auth('userId') userId: string,
+        @Body() confirmChangePasswordDto: ConfirmChangePasswordDto,
+    ) {
+        return this.usersService.confirmChangePassword(
+            userId,
+            confirmChangePasswordDto,
+        )
     }
     // @UseGuards(JwtAuthGuard)
     // @Get()

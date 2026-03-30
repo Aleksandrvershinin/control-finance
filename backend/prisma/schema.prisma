@@ -23,6 +23,21 @@ enum CategoryType {
     EXPENSE
 }
 
+enum VerificationCodeType {
+    PASSWORD_CHANGE
+    LOGIN
+    EMAIL_VERIFICATION
+    PASSWORD_RESET
+    TWO_FACTOR
+}
+
+enum VerificationCodeChannel {
+    EMAIL
+    SMS
+    TELEGRAM
+    AUTH_APP
+}
+
 //////////////////////////////////////////////////////
 // SYSTEM
 //////////////////////////////////////////////////////
@@ -52,9 +67,10 @@ model User {
     currencyId String?
     currency   Currency? @relation(fields: [currencyId], references: [id])
 
-    accounts   Account[]
-    funds      Fund[]
-    categories Category[]
+    accounts          Account[]
+    funds             Fund[]
+    categories        Category[]
+    verificationCodes VerificationCode[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -71,6 +87,29 @@ model Currency {
     symbol String @default("")
 
     users User[]
+}
+
+model VerificationCode {
+    id          String                  @id @default(uuid())
+    type        VerificationCodeType
+    channel     VerificationCodeChannel
+    target      String
+    codeHash    String
+    expireAt    DateTime
+    requestedAt DateTime                @default(now())
+    consumedAt  DateTime?
+    attemptCount Int                    @default(0)
+    lastAttemptAt DateTime?
+    metadata    Json?
+    userId      String?
+    user        User?                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt   DateTime                @default(now())
+    updatedAt   DateTime                @updatedAt
+
+    @@unique([type, channel, target])
+    @@index([userId])
+    @@index([expireAt])
+    @@index([consumedAt])
 }
 
 //////////////////////////////////////////////////////
