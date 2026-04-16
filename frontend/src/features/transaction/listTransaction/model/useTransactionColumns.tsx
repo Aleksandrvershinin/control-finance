@@ -205,7 +205,7 @@ export const useTransactionColumns = ({
                 const transaction = row.original
 
                 return (
-                    <Stack spacing={2}>
+                    <Stack wrap={true} spacing={1}>
                         <EditTransactionBtn
                             title="Редактировать транзакцию"
                             transaction={transaction}

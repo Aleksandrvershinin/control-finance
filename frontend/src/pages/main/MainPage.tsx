@@ -26,12 +26,12 @@ export function MainPage() {
                     <Stack
                         direction={'column-reverse'}
                         align={'center'}
-                        className="mb-10 lg:flex-row-reverse lg:items-start lg:gap-10"
+                        className="mb-10 lg:flex-row-reverse lg:items-start lg:justify-between"
                     >
-                        <div className="w-full lg:flex-[0_0_620px] lg:w-[620px] xl:flex-1 xl:w-auto">
+                        <div className="w-full lg:flex-1 lg:max-w-[635px] xl:max-w-[890px] 2xl:max-w-[1116px]">
                             <TransactionTableWidget />
                         </div>
-                        <div className="flex-none w-[320px] xl:w-[350px]">
+                        <div className="flex-none w-[320px] 2xl:w-[350px]">
                             <FundsWidget />
                             <Accounts />
                             <div className="lg:hidden">
