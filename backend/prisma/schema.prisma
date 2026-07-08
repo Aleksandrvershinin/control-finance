@@ -90,21 +90,21 @@ model Currency {
 }
 
 model VerificationCode {
-    id          String                  @id @default(uuid())
-    type        VerificationCodeType
-    channel     VerificationCodeChannel
-    target      String
-    codeHash    String
-    expireAt    DateTime
-    requestedAt DateTime                @default(now())
-    consumedAt  DateTime?
-    attemptCount Int                    @default(0)
+    id            String                  @id @default(uuid())
+    type          VerificationCodeType
+    channel       VerificationCodeChannel
+    target        String
+    codeHash      String
+    expireAt      DateTime
+    requestedAt   DateTime                @default(now())
+    consumedAt    DateTime?
+    attemptCount  Int                     @default(0)
     lastAttemptAt DateTime?
-    metadata    Json?
-    userId      String?
-    user        User?                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    createdAt   DateTime                @default(now())
-    updatedAt   DateTime                @updatedAt
+    metadata      Json?
+    userId        String?
+    user          User?                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt     DateTime                @default(now())
+    updatedAt     DateTime                @updatedAt
 
     @@unique([type, channel, target])
     @@index([userId])
@@ -122,8 +122,9 @@ model Account {
     order          Int     @default(0)
     isHidden       Boolean @default(false)
     initialBalance Decimal @default(0)
-    userId         String
-    user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     accountFundBalances AccountFundBalance[]
     ledgerEntries       LedgerEntry[]
@@ -214,7 +215,7 @@ model LedgerEntry {
     account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
     fundId String?
-    fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: Cascade)
+    fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: SetNull)
 
     amount Decimal
 
