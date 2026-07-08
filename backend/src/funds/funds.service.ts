@@ -141,7 +141,10 @@ export class FundsService {
 
             return mapFund(fund)
         } catch (error) {
-            if (error.code === 'P2025') {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2025'
+            ) {
                 throw new BadRequestException('Фонд не найден')
             }
             throw error
