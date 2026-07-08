@@ -23,7 +23,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
     transferAction,
     visibilityAction,
     editAction,
-    deleteAction,
+    // deleteAction,
     funds,
     currencyCode,
     currencySymbol,
@@ -62,7 +62,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({
                     <Stack>
                         <div>{visibilityAction}</div>
                         <div>{editAction}</div>
-                        <div>{deleteAction}</div>
+                        {/* <div>{deleteAction}</div> */}
                     </Stack>
                 </Stack>
             </Stack>

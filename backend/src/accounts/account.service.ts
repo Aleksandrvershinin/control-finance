@@ -182,23 +182,23 @@ export class AccountService {
         return this.findAll(userId)
     }
 
-    async remove(userId: string, accountId: string) {
-        await this.ensureAccount(userId, accountId)
+    // async remove(userId: string, accountId: string) {
+    //     await this.ensureAccount(userId, accountId)
 
-        const account = await this.prisma.account.delete({
-            where: { id: accountId },
-            include: {
-                accountFundBalances: {
-                    include: { fund: true },
-                },
-                user: {
-                    select: { currencyId: true },
-                },
-            },
-        })
+    //     const account = await this.prisma.account.delete({
+    //         where: { id: accountId },
+    //         include: {
+    //             accountFundBalances: {
+    //                 include: { fund: true },
+    //             },
+    //             user: {
+    //                 select: { currencyId: true },
+    //             },
+    //         },
+    //     })
 
-        return mapAccount(account)
-    }
+    //     return mapAccount(account)
+    // }
     private async ensureAccount(userId: string, accountId: string) {
         const account = await this.prisma.account.findFirst({
             where: {

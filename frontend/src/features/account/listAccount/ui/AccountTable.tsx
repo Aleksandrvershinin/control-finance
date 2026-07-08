@@ -7,11 +7,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-    DeleteButton,
     EditButton,
 } from '@/shared/ui'
 import { useUpdateAccountDialogStore } from '../../updateAccount/model/useUpdateAccountDialogStore'
-import { useDeleteAccountDialogStore } from '../../deleteAccount/model/useDeleteAccountDialogStore'
 
 interface AccountTableProps {
     accounts: Account[]
@@ -19,7 +17,7 @@ interface AccountTableProps {
 
 export function AccountTable({ accounts }: AccountTableProps) {
     const openUpdate = useUpdateAccountDialogStore((s) => s.open)
-    const openDelete = useDeleteAccountDialogStore((s) => s.open)
+    // const openDelete = useDeleteAccountDialogStore((s) => s.open)
 
     return (
         <Table>
@@ -40,14 +38,14 @@ export function AccountTable({ accounts }: AccountTableProps) {
                                 <EditButton
                                     onClick={() => openUpdate(account)}
                                 />
-                                <DeleteButton
+                                {/* <DeleteButton
                                     onClick={() =>
                                         openDelete({
                                             id: account.id,
                                             name: account.name,
                                         })
                                     }
-                                />
+                                /> */}
                             </Stack>
                         </TableCell>
                     </TableRow>

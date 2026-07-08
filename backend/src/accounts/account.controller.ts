@@ -58,9 +58,9 @@ export class AccountController {
         return { data: toResponse(ResponseAccountDto, account) }
     }
 
-    @Delete(':id')
-    async remove(@Auth('userId') userId: string, @Param('id') id: string) {
-        const account = await this.accountService.remove(userId, id)
-        return { data: toResponse(ResponseAccountDto, account) }
-    }
+    // @Delete(':id')
+    // async remove(@Auth('userId') userId: string, @Param('id') id: string) {
+    //     const account = await this.accountService.remove(userId, id)
+    //     return { data: toResponse(ResponseAccountDto, account) }
+    // }
 }
