@@ -1,10 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-    createIncomeExpenseFormSchema,
-    CreateIncomeExpenseFormValues,
-    createTransferFormSchema,
-    CreateTransferFormValues,
-} from './shema'
+import { createTransferFormSchema, CreateTransferFormValues } from './shema'
 import {
     CreateTransactionConfig,
     useCreateTransactionDialogStore,
