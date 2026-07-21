@@ -1,7 +1,7 @@
 import { DefaultValues } from 'react-hook-form'
-import { CreateTransactionFormValues } from './createTransactionForm.types'
+import { CreateIncomeExpenseFormValues } from './shema'
 
-export const createTransactionDefaultValues: DefaultValues<CreateTransactionFormValues> =
+export const createTransactionDefaultValues: DefaultValues<CreateIncomeExpenseFormValues> =
     {
         accountId: '',
         type: 'EXPENSE',
