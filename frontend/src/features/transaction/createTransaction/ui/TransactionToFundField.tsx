@@ -12,13 +12,13 @@ import {
     SelectValue,
 } from '@/shared/ui'
 import { useFormContext } from 'react-hook-form'
-import { CreateTransactionFormValues } from '../model/createTransactionForm.types'
+import { CreateTransferFundFormValues } from '../model/shema'
 
 export const TransactionToFundField = () => {
     const {
         data: { funds },
     } = useSuspenseFunds()
-    const form = useFormContext<CreateTransactionFormValues>()
+    const form = useFormContext<CreateTransferFundFormValues>()
     return (
         <>
             {funds.length > 0 && (
@@ -30,7 +30,7 @@ export const TransactionToFundField = () => {
                             <FormLabel>Фонд зачисления</FormLabel>
                             <Select
                                 required={false}
-                                value={field.value}
+                                value={field.value ?? undefined}
                                 onValueChange={field.onChange}
                             >
                                 <FormControl>
@@ -39,7 +39,7 @@ export const TransactionToFundField = () => {
                                         hasValue={!!field.value}
                                         onClear={() => field.onChange(null)}
                                     >
-                                        <SelectValue placeholder="Выберите фонд на который поступят средства" />
+                                        <SelectValue placeholder="Без фонда" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>

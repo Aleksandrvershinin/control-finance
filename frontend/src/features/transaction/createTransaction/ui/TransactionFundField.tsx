@@ -1,13 +1,18 @@
 import { FundSelect, useSuspenseFunds } from '@/entities/fund'
 import { FormControl, FormField, FormItem, FormMessage } from '@/shared/ui'
 import { useFormContext } from 'react-hook-form'
-import { CreateTransactionFormValues } from '../model/createTransactionForm.types'
+import {
+    CreateIncomeExpenseFormValues,
+    CreateTransferFundFormValues,
+} from '../model/shema'
 
 export const TransactionFundField = () => {
     const {
         data: { funds },
     } = useSuspenseFunds()
-    const form = useFormContext<CreateTransactionFormValues>()
+    const form = useFormContext<
+        CreateIncomeExpenseFormValues | CreateTransferFundFormValues
+    >()
     return (
         <>
             {funds.length > 0 && (
@@ -20,6 +25,7 @@ export const TransactionFundField = () => {
                                 <FundSelect
                                     isClearable
                                     {...field}
+                                    value={field.value ?? undefined}
                                     options={funds.map((fund) => ({
                                         label: fund.name,
                                         value: fund.id,

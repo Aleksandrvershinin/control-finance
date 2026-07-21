@@ -60,17 +60,21 @@ export const FundsWidget = () => {
                             <div className="w-full mb-3">
                                 <TransactionFundCreateButton />
                             </div>
-                            <div className="mb-2">
-                                <FundCard
-                                    className="pt-5"
-                                    name={'Без фонда'}
-                                    balance={witoutFund}
-                                    color=""
-                                    currencyCode={
-                                        getCurrencyById(user?.currencyId).code
-                                    }
-                                />
-                            </div>
+                            {witoutFund !== 0 && (
+                                <div className="mb-2">
+                                    <FundCard
+                                        className="pt-5"
+                                        name={'Без фонда'}
+                                        balance={witoutFund}
+                                        color=""
+                                        currencyCode={
+                                            getCurrencyById(user?.currencyId)
+                                                .code
+                                        }
+                                    />
+                                </div>
+                            )}
+
                             <SortableFundsList
                                 funds={filteredFunds}
                                 isFetching={isFetching}
