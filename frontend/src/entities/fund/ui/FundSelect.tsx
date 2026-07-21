@@ -4,7 +4,7 @@ import React from 'react'
 type Props = MySelectProps
 
 export const FundSelect = React.forwardRef<HTMLButtonElement, Props>(
-    ({ placeholder = 'Выберите фонд', label = 'Фонд', ...rest }, ref) => {
+    ({ placeholder = 'Без фонда', label = 'Фонд', ...rest }, ref) => {
         return (
             <MySelect
                 ref={ref}

@@ -12,6 +12,7 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 import { ReorderAccountsDto } from './dto/reorderAccounts.dto'
 import { mapAccount } from './account.mapper'
 import { TransactionsService } from 'src/transactions/transactions.service'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class AccountService {
@@ -42,9 +43,7 @@ export class AccountService {
                     userId,
                 },
                 include: {
-                    accountFundBalances: {
-                        include: { fund: true },
-                    },
+                    balance: true,
                     user: {
                         select: { currencyId: true },
                     },
@@ -69,13 +68,7 @@ export class AccountService {
         const accounts = await this.prisma.account.findMany({
             where: { userId },
             include: {
-                accountFundBalances: {
-                    include: { fund: true },
-                    orderBy: [
-                        { fund: { order: 'asc' } },
-                        { fund: { createdAt: 'asc' } },
-                    ],
-                },
+                balance: true,
                 user: {
                     select: { currencyId: true },
                 },
@@ -114,9 +107,7 @@ export class AccountService {
             const account = await this.prisma.account.findUniqueOrThrow({
                 where: { id: accountId },
                 include: {
-                    accountFundBalances: {
-                        include: { fund: true },
-                    },
+                    balance: true,
                     user: {
                         select: { currencyId: true },
                     },
@@ -136,9 +127,7 @@ export class AccountService {
                     : {}),
             },
             include: {
-                accountFundBalances: {
-                    include: { fund: true },
-                },
+                balance: true,
                 user: {
                     select: { currencyId: true },
                 },
@@ -227,5 +216,20 @@ export class AccountService {
         }
 
         return user.currency
+    }
+
+    async getUserAccounts(
+        tx: Prisma.TransactionClient,
+        userId: string,
+        accountIds: string[],
+    ) {
+        return tx.account.findMany({
+            where: {
+                userId,
+                id: {
+                    in: accountIds,
+                },
+            },
+        })
     }
 }

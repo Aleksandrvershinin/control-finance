@@ -7,7 +7,7 @@ import {
 
 import { FormControl, FormField, FormItem, FormMessage } from '@/shared/ui'
 
-import { BaseTransactionFormValues } from '../model/baseTransactionForm.types'
+import { BaseTransactionFormValues } from '../model/baseTransactionFormSchema'
 
 export function TransactionCategoryField({ type }: { type: CategoryType }) {
     const form = useFormContext<BaseTransactionFormValues>()

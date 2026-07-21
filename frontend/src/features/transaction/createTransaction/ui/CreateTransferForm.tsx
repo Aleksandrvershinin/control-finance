@@ -1,22 +1,20 @@
 import { Form, FormRootMessage, LoadingButton, Stack } from '@/shared/ui'
-import { useCreateTransactionForm } from '../model/useCreateTransactionForm'
 import { CreateTransactionConfig } from '../model/useCreateTransactionDialogStore'
+import { useTransferForm } from '../model/useTransferForm'
+import { TransactionForm } from '@/entities/transaction'
 import { TransactionAccountField } from './TransactionAccountField'
 import {
     TransactionAmountField,
-    TransactionCategoryField,
     TransactionCommentField,
     TransactionDateField,
 } from '../../baseTransactionForm'
-import { TransactionFundField } from './TransactionFundField'
-import { TransactionToFundField } from './TransactionToFundField'
 
-interface TransactionFormProps {
+interface Props {
     config: CreateTransactionConfig
 }
 
-export function CreateTransactionForm({ config }: TransactionFormProps) {
-    const form = useCreateTransactionForm(config)
+export const CreateTransferForm = ({ config }: Props) => {
+    const form = useTransferForm(config)
     const { onSubmit, ...formProps } = form
 
     const {
@@ -24,28 +22,19 @@ export function CreateTransactionForm({ config }: TransactionFormProps) {
     } = formProps
     return (
         <Form {...formProps}>
-            <form
+            <TransactionForm
                 onSubmit={formProps.handleSubmit(onSubmit)}
-                className="space-y-4 w-full"
+                {...formProps}
             >
                 <FormRootMessage className="text-center" />
 
                 <Stack direction={'column'}>
                     <TransactionAccountField lable="Счет" name="accountId" />
-                    <TransactionFundField />
-                    {config.type === 'TRANSFER' && (
-                        <>
-                            <TransactionAccountField
-                                lable="Счет зачисления"
-                                name="toAccountId"
-                            />
-                            <TransactionToFundField />
-                        </>
-                    )}
+                    <TransactionAccountField
+                        lable="Счет зачисления"
+                        name="toAccountId"
+                    />
                     <TransactionAmountField />
-                    {config.type !== 'TRANSFER' && (
-                        <TransactionCategoryField type={config.type} />
-                    )}
                     <TransactionDateField />
                     <TransactionCommentField />
                 </Stack>
@@ -58,7 +47,7 @@ export function CreateTransactionForm({ config }: TransactionFormProps) {
                 >
                     Создать
                 </LoadingButton>
-            </form>
+            </TransactionForm>
         </Form>
     )
 }

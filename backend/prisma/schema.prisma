@@ -129,8 +129,9 @@ model Account {
     accountFundBalances AccountFundBalance[]
     ledgerEntries       LedgerEntry[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime        @default(now())
+    updatedAt DateTime        @updatedAt
+    balance   AccountBalance?
 
     @@unique([userId, name])
     @@unique([id, userId])
@@ -152,8 +153,9 @@ model Fund {
     accountFundBalances AccountFundBalance[]
     ledgerEntries       LedgerEntry[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+    balance   FundBalance?
 
     @@unique([userId, name])
     @@unique([id, userId])
@@ -211,8 +213,8 @@ model LedgerEntry {
     transactionId String
     transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 
-    accountId String
-    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    accountId String?
+    account   Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
     fundId String?
     fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: SetNull)
@@ -242,4 +244,20 @@ model AccountFundBalance {
     @@index([accountId, fundId])
     @@index([accountId])
     @@index([fundId])
+}
+
+model AccountBalance {
+    id        String   @id @default(uuid())
+    accountId String   @unique
+    account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    balance   Decimal  @default(0)
+    updatedAt DateTime @updatedAt
+}
+
+model FundBalance {
+    id        String   @id @default(uuid())
+    fundId    String   @unique
+    fund      Fund     @relation(fields: [fundId], references: [id], onDelete: Cascade)
+    balance   Decimal  @default(0)
+    updatedAt DateTime @updatedAt
 }

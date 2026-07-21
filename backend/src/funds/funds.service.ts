@@ -14,16 +14,10 @@ import { mapFund, mapFunds } from './mappers/fund.mapper'
 export class FundsService {
     constructor(private prisma: PrismaService) {}
 
-    private fundInclude(userId: string): Prisma.FundInclude {
+    // Изменили include: теперь запрашиваем баланс напрямую из FundBalance
+    private fundInclude(): Prisma.FundInclude {
         return {
-            accountFundBalances: {
-                where: {
-                    account: { userId },
-                },
-                select: {
-                    balance: true,
-                },
-            },
+            balance: true, // Подтягиваем запись из FundBalance
             user: {
                 select: {
                     currencyId: true,
@@ -39,7 +33,7 @@ export class FundsService {
                     ...createFundDto,
                     userId,
                 },
-                include: this.fundInclude(userId),
+                include: this.fundInclude(), // Убрали userId из аргументов, он больше не нужен для фильтрации счетов
             })
 
             return mapFund(fund)
@@ -49,7 +43,6 @@ export class FundsService {
                     throw new BadRequestException('Название уже существует')
                 }
             }
-
             throw error
         }
     }
@@ -58,7 +51,7 @@ export class FundsService {
         const funds = await this.prisma.fund.findMany({
             where: { userId },
             orderBy: { order: 'asc' },
-            include: this.fundInclude(userId),
+            include: this.fundInclude(),
         })
 
         return mapFunds(funds)
@@ -102,13 +95,10 @@ export class FundsService {
         try {
             const fund = await this.prisma.fund.update({
                 where: {
-                    id_userId: {
-                        id,
-                        userId,
-                    },
+                    id_userId: { id, userId },
                 },
                 data: updateFundDto,
-                include: this.fundInclude(userId),
+                include: this.fundInclude(),
             })
 
             return mapFund(fund)
@@ -117,12 +107,10 @@ export class FundsService {
                 if (error.code === 'P2025') {
                     throw new NotFoundException('Фонд не найден')
                 }
-
                 if (error.code === 'P2002') {
                     throw new BadRequestException('Название уже существует')
                 }
             }
-
             throw error
         }
     }
@@ -131,12 +119,9 @@ export class FundsService {
         try {
             const fund = await this.prisma.fund.delete({
                 where: {
-                    id_userId: {
-                        id,
-                        userId,
-                    },
+                    id_userId: { id, userId },
                 },
-                include: this.fundInclude(userId),
+                include: this.fundInclude(),
             })
 
             return mapFund(fund)
@@ -149,5 +134,19 @@ export class FundsService {
             }
             throw error
         }
+    }
+    async getUserFunds(
+        tx: Prisma.TransactionClient,
+        userId: string,
+        fundIds: string[],
+    ) {
+        return tx.fund.findMany({
+            where: {
+                userId,
+                id: {
+                    in: fundIds,
+                },
+            },
+        })
     }
 }

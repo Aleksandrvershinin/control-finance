@@ -26,7 +26,7 @@ export const TransactionCreateButton = ({
     action,
 }: {
     action: CreateTransactionConfig['type']
-    accountId: string
+    accountId?: string
 }) => {
     const open = useCreateTransactionDialogStore((s) => s.open)
     const currentConfig = config[action]

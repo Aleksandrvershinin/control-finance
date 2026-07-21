@@ -1,24 +1,17 @@
 import { Prisma } from '@prisma/client'
+
+// Новый тип: запрашиваем баланс из таблицы AccountBalance
 type AccountWithRelations = Prisma.AccountGetPayload<{
     include: {
-        accountFundBalances: { include: { fund: true } }
+        balance: true // Модель AccountBalance
         user: { select: { currencyId: true } }
     }
 }>
-export function mapAccount(account: AccountWithRelations) {
-    const totalBalance = account.accountFundBalances.reduce(
-        (sum, f) => sum + Number(f.balance),
-        0,
-    )
 
-    const funds = account.accountFundBalances
-        .filter((f) => f.fund !== null)
-        .map((f) => ({
-            id: f.fund!.id,
-            name: f.fund!.name,
-            colorBg: f.fund!.colorBg,
-            balance: Number(f.balance),
-        }))
+export function mapAccount(account: AccountWithRelations) {
+    // Берем готовый агрегированный баланс из связанной таблицы.
+    // Если записи почему-то нет (например, только создали счет), возвращаем 0.
+    const totalBalance = account.balance ? Number(account.balance.balance) : 0
 
     return {
         id: account.id,
@@ -28,6 +21,5 @@ export function mapAccount(account: AccountWithRelations) {
         balance: totalBalance,
         initialBalance: account.initialBalance.toNumber(),
         currencyId: account.user.currencyId,
-        funds,
     }
 }

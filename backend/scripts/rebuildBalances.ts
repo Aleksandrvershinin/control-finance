@@ -3,21 +3,33 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function rebuildBalances() {
-    await prisma.accountFundBalance.deleteMany()
+    await prisma.accountBalance.deleteMany()
+    await prisma.fundBalance.deleteMany()
 
     await prisma.$executeRawUnsafe(`
-    INSERT INTO "AccountFundBalance" ("id", "accountId", "fundId", "balance", "updatedAt")
-    SELECT
-      gen_random_uuid(),
-      "accountId",
-      "fundId",
-      SUM("amount") as balance,
-      NOW()
-    FROM "LedgerEntry"
-    GROUP BY "accountId", "fundId"
-  `)
+        INSERT INTO "AccountBalance" ("id", "accountId", "balance", "updatedAt")
+        SELECT
+            gen_random_uuid(),
+            "accountId",
+            COALESCE(SUM("amount"), 0),
+            NOW()
+        FROM "LedgerEntry"
+        GROUP BY "accountId"
+    `)
 
-    console.log('balances rebuilt')
+    await prisma.$executeRawUnsafe(`
+        INSERT INTO "FundBalance" ("id", "fundId", "balance", "updatedAt")
+        SELECT
+            gen_random_uuid(),
+            "fundId",
+            COALESCE(SUM("amount"), 0),
+            NOW()
+        FROM "LedgerEntry"
+        WHERE "fundId" IS NOT NULL
+        GROUP BY "fundId"
+    `)
+
+    console.log('Balances rebuilt')
 }
 
 async function run() {

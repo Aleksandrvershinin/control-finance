@@ -1,9 +1,10 @@
-import { Transaction } from '@/entities/transaction'
+import { Transaction, TRANSFER_TYPES } from '@/entities/transaction'
 import { create } from 'zustand'
 
 export interface CreateTransactionConfig {
     type: Exclude<Transaction['type'], 'INITIAL'>
-    accountId: string
+    transferType?: (typeof TRANSFER_TYPES)[keyof typeof TRANSFER_TYPES]
+    accountId?: string
 }
 
 type CreateTransactionDialogState = {

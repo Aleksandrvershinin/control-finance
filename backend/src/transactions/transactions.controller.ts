@@ -107,17 +107,17 @@ export class TransactionsController {
         }
     }
 
-    @Get('analytics')
-    async getTransactionsAnalytics(
-        @Auth('userId') userId: string,
-        @Query() dto: GetTransactionsDto,
-    ) {
-        const analytics =
-            await this.transactionsService.getTransactionsAnalytics(userId, dto)
+    // @Get('analytics')
+    // async getTransactionsAnalytics(
+    //     @Auth('userId') userId: string,
+    //     @Query() dto: GetTransactionsDto,
+    // ) {
+    //     const analytics =
+    //         await this.transactionsService.getTransactionsAnalytics(userId, dto)
 
-        return {
-            success: true,
-            data: analytics,
-        }
-    }
+    //     return {
+    //         success: true,
+    //         data: analytics,
+    //     }
+    // }
 }

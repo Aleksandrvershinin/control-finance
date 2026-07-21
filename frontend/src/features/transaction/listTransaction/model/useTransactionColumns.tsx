@@ -9,6 +9,8 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react'
 import { useDeleteTransactionDialogStore } from '../../deleteTransaction'
 import { EditTransactionBtn } from '../../updateTransaction'
+import { useSuspensCurrentUser } from '@/entities/user'
+import { CurrentUser } from '@/entities/user/model/user.types'
 
 type SortProps = {
     field: 'date' | 'amount' | 'description'
@@ -136,12 +138,16 @@ const createAmountColumn = (
     renderHeader: (label: string, field: SortProps['field']) => JSX.Element,
     getAccountById: ReturnType<typeof useGetAccountById>,
     getCurrencyById: ReturnType<typeof useGetCurrencyById>,
+    user: CurrentUser | null,
 ): ColumnDef<Transaction> => ({
     id: 'amount',
     header: () => renderHeader('Сумма', 'amount'),
     cell: (info) => {
-        const account = getAccountById(info.row.original.accountId)
-        const currency = getCurrencyById(account?.currencyId)
+        const accountId = info.row.original.accountId
+        const account = accountId ? getAccountById(accountId) : null
+        const currency = getCurrencyById(
+            account?.currencyId ?? user?.currencyId,
+        )
         return (
             <div className="font-semibold">
                 {formatCurrency(info.row.original.amount, currency?.code)}
@@ -160,7 +166,7 @@ export const useTransactionColumns = ({
     const getCategoryById = useGetCategoryById()
     const openDelete = useDeleteTransactionDialogStore((s) => s.open)
     const renderHeader = createSortableHeaderRenderer(sort, onSortChange)
-
+    const { data: user } = useSuspensCurrentUser()
     return [
         createIndexColumn(),
         createDateColumn(renderHeader),
@@ -196,7 +202,7 @@ export const useTransactionColumns = ({
             (transaction) => transaction.categoryId,
         ),
         createDescriptionColumn(renderHeader),
-        createAmountColumn(renderHeader, getAccountById, getCurrencyById),
+        createAmountColumn(renderHeader, getAccountById, getCurrencyById, user),
         {
             id: 'actions',
             header: 'Действия',

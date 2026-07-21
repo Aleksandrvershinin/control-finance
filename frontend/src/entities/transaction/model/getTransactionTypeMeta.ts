@@ -1,11 +1,8 @@
-import {
-    transactionsTypeMeta,
-    TransactionTypeMeta,
-} from './transactionTypeMeta.types'
+import { TRANSACTION_TYPES, transactionsTypeMeta } from './constants'
 
 export const getTransactionTypeMeta = (
-    type: TransactionTypeMeta['type'],
-): TransactionTypeMeta => {
+    type: (typeof TRANSACTION_TYPES)[keyof typeof TRANSACTION_TYPES],
+) => {
     const typeMeta = transactionsTypeMeta.find(
         (typeMeta) => typeMeta.type === type,
     )

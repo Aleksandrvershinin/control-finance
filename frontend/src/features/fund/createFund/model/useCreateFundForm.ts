@@ -22,8 +22,6 @@ export function useCreateFundForm() {
     const handleError = useFormErrorHandler(form.setError)
 
     const onSubmit = async (formData: CreateFundFormValues) => {
-        console.log(formData)
-
         await mutateAsync(formData, {
             onSuccess: () => {
                 toast({

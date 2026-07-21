@@ -27,14 +27,14 @@ export const SortableFundItem: React.FC<SortableFundItemProps> = ({
         <li
             ref={setNodeRef}
             style={{ transform: CSS.Transform.toString(transform), transition }}
-            className={cn('touch-none relative', {
+            className={cn('relative', {
                 'opacity-70 z-10': isDragging,
             })}
         >
             <button
                 type="button"
                 ref={setActivatorNodeRef}
-                className="absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 rounded-full border border-[--neutral-300] bg-white text-[--neutral-500] flex items-center justify-center cursor-grab active:cursor-grabbing"
+                className="touch-none absolute top-[15%] left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 rounded-full border border-[--neutral-300] bg-white text-[--neutral-500] flex items-center justify-center cursor-grab active:cursor-grabbing"
                 aria-label="Перетащить карточку фонда"
                 {...attributes}
                 {...listeners}

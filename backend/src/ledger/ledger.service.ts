@@ -36,36 +36,98 @@ export class LedgerService {
         prisma: Prisma.TransactionClient
         transactionId: string
         type: TransactionType
-        accountId: string
+        accountId?: string | null
         amount: number
         fundId?: string | null
         toAccountId?: string
         toFundId?: string | null
     }) {
-        const entries: Prisma.LedgerEntryCreateInput[] = [
-            {
-                transaction: { connect: { id: transactionId } },
-                account: { connect: { id: accountId } },
-                fund: fundId ? { connect: { id: fundId } } : undefined,
-                amount: this.calculateAmount(type, amount),
-            },
-        ]
-
         if (type === TransactionType.TRANSFER) {
-            if (!toAccountId) {
+            // Для перевода между счетами оба счета обязательны
+            if ((accountId && !toAccountId) || (!accountId && toAccountId)) {
                 throw new BadRequestException(
-                    'toAccountId is required for transfer transaction',
+                    'Both accountId and toAccountId must be provided for account transfer',
                 )
             }
-            entries.push({
-                transaction: { connect: { id: transactionId } },
-                account: { connect: { id: toAccountId } },
-                fund: toFundId ? { connect: { id: toFundId } } : undefined,
+
+            // Должен быть хотя бы один источник/назначение
+            if (!accountId && !fundId && !toFundId) {
+                throw new BadRequestException(
+                    'TRANSFER requires accounts or funds',
+                )
+            }
+        }
+
+        const entries: Prisma.LedgerEntryCreateInput[] = []
+
+        // Исходная проводка
+        const fromEntry: Prisma.LedgerEntryCreateInput = {
+            transaction: {
+                connect: {
+                    id: transactionId,
+                },
+            },
+            amount: this.calculateAmount(type, amount),
+        }
+
+        if (accountId) {
+            fromEntry.account = {
+                connect: {
+                    id: accountId,
+                },
+            }
+        }
+
+        if (fundId) {
+            fromEntry.fund = {
+                connect: {
+                    id: fundId,
+                },
+            }
+        }
+
+        if (fromEntry.account || fromEntry.fund) {
+            entries.push(fromEntry)
+        }
+
+        // Проводка назначения
+        if (type === TransactionType.TRANSFER) {
+            const toEntry: Prisma.LedgerEntryCreateInput = {
+                transaction: {
+                    connect: {
+                        id: transactionId,
+                    },
+                },
                 amount: Math.abs(amount),
-            })
+            }
+
+            if (toAccountId) {
+                toEntry.account = {
+                    connect: {
+                        id: toAccountId,
+                    },
+                }
+            }
+
+            if (toFundId) {
+                toEntry.fund = {
+                    connect: {
+                        id: toFundId,
+                    },
+                }
+            }
+
+            if (toEntry.account || toEntry.fund) {
+                entries.push(toEntry)
+            }
+        }
+
+        if (entries.length === 0) {
+            throw new BadRequestException('No ledger entries to create')
         }
 
         const created: LedgerEntry[] = []
+
         for (const entry of entries) {
             const e = await prisma.ledgerEntry.create({
                 data: entry,
@@ -73,6 +135,7 @@ export class LedgerService {
 
             created.push(e)
         }
+
         for (const entry of created) {
             await this.balancesService.applyEntry(prisma, entry)
         }

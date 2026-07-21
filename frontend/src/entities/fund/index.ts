@@ -1,3 +1,4 @@
+export { getFundsTotal } from './lib/getFundsTotal'
 export { useGetFundById } from './model/useGetFundById'
 export { FundMultiSelect } from './ui/FundMultiSelect'
 export { FundSelect } from './ui/FundSelect'

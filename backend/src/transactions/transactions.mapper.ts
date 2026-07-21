@@ -1,35 +1,28 @@
-import { plainToInstance } from 'class-transformer'
-import { ResponseTransactionDto } from './dto/response-transaction.dto'
 import { LedgerEntry, Transaction, TransactionType } from '@prisma/client'
 
 export function mapTransaction(
     transaction: Transaction,
-    entries: LedgerEntry[],
+    entries: LedgerEntry[] = [],
 ) {
-    let accountId: string | undefined
-    let toAccountId: string | undefined | null
-    let fundId: string | undefined | null
-    let toFundId: string | undefined | null
-    let amount = 0
-
     if (transaction.type === TransactionType.TRANSFER) {
         const from = entries.find((e) => Number(e.amount) < 0)
         const to = entries.find((e) => Number(e.amount) > 0)
 
-        accountId = from?.accountId
-        fundId = from?.fundId
-
-        toAccountId = to?.accountId
-        toFundId = to?.fundId
-
-        amount = Math.abs(Number(from?.amount))
-    } else {
-        const entry = entries[0]
-
-        accountId = entry.accountId
-        fundId = entry.fundId
-        amount = Number(entry.amount)
+        return {
+            id: transaction.id,
+            type: transaction.type,
+            categoryId: transaction.categoryId,
+            description: transaction.description,
+            date: transaction.date,
+            accountId: from?.accountId ?? null,
+            toAccountId: to?.accountId ?? null,
+            fundId: from?.fundId ?? null,
+            toFundId: to?.fundId ?? null,
+            amount: Math.abs(Number(from?.amount ?? to?.amount ?? 0)),
+        }
     }
+
+    const entry = entries[0]
 
     return {
         id: transaction.id,
@@ -37,10 +30,10 @@ export function mapTransaction(
         categoryId: transaction.categoryId,
         description: transaction.description,
         date: transaction.date,
-        accountId,
-        toAccountId,
-        fundId,
-        toFundId,
-        amount,
+        accountId: entry?.accountId ?? null,
+        toAccountId: null,
+        fundId: entry?.fundId ?? null,
+        toFundId: null,
+        amount: Number(entry?.amount ?? 0),
     }
 }

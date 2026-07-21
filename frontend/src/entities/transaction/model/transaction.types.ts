@@ -1,11 +1,17 @@
 import { z } from 'zod'
+import { TRANSACTION_TYPES } from './constants'
 
 export const transactionSchema = z.object({
     id: z.string(),
     amount: z.number(),
-    type: z.enum(['INCOME', 'EXPENSE', 'TRANSFER', 'INITIAL']),
+    type: z.enum([
+        TRANSACTION_TYPES.INCOME,
+        TRANSACTION_TYPES.EXPENSE,
+        TRANSACTION_TYPES.TRANSFER,
+        TRANSACTION_TYPES.INITIAL,
+    ]),
     date: z.string(),
-    accountId: z.string(),
+    accountId: z.string().optional().nullable(),
     categoryId: z.string().optional().nullable(),
     description: z.string().optional().nullable(),
     toAccountId: z.string().optional().nullable(),
@@ -24,7 +30,7 @@ export const baseTransactionDtoSchema = z.object({
 
 export const createTransactionDtoSchema = baseTransactionDtoSchema.extend({
     type: z.enum(['INCOME', 'EXPENSE', 'TRANSFER']),
-    accountId: z.string(),
+    accountId: z.string().optional(),
     toAccountId: z.string().optional(),
     fromFundId: z.string().optional(),
     toFundId: z.string().optional(),

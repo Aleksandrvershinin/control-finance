@@ -1,7 +1,7 @@
 import z from 'zod'
-import { baseTransactionSchema } from '../../baseTransactionForm'
+import { baseTransactionFormSchema } from '../../baseTransactionForm'
 
-export const updateTransactionFormSchema = baseTransactionSchema
+export const updateTransactionFormSchema = baseTransactionFormSchema
     .pick({
         amount: true,
         date: true,

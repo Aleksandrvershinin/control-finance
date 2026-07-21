@@ -21,12 +21,4 @@ export class ResponseAccountDto {
 
     @Expose()
     currencyId: string
-
-    @Expose()
-    funds: {
-        id: string
-        name: string
-        colorBg: string
-        balance: number
-    }[]
 }

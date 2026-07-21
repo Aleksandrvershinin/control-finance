@@ -25,14 +25,14 @@ export const TransactionTableWidget = () => {
     const queryParams = transformMainFilterToTransactionQueryDto(state)
     const { data, isLoading, isFetching } = useTransaction(queryParams, {
         onError: () => {
-            state.resetFilters()
+            // state.resetFilters()
         },
     })
 
     const { data: summary, isFetching: isSummaryFetching } =
         useTransactionSummary(queryParams, {
             onError: () => {
-                state.resetFilters()
+                // state.resetFilters()
             },
         })
 

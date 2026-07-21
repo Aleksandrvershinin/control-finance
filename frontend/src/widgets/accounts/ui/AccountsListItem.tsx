@@ -66,39 +66,39 @@ export const AccountsListItem = ({
             deleteAction={
                 <DeleteAccountButton id={account.id} name={account.name} />
             }
-            funds={
-                !hasFunds ? null : (
-                    <Accordion
-                        type="single"
-                        collapsible
-                        value={fundsOpen}
-                        onValueChange={handleFundsChange}
-                    >
-                        <AccordionItem
-                            className="border-none"
-                            value={ACCORDION_KEYS.FUNDS_IN_ACCOUNTS}
-                        >
-                            <Separator />
-                            <AccordionTrigger>
-                                <div className="font-semibold">Фонды</div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <AccountFundsList
-                                    account={account}
-                                    renderFundCard={(fund) => (
-                                        <FundCard
-                                            name={fund.name}
-                                            balance={fund.balance}
-                                            color={fund.colorBg}
-                                            currencyCode={currencyCode}
-                                        />
-                                    )}
-                                />
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                )
-            }
+            // funds={
+            //     !hasFunds ? null : (
+            //         <Accordion
+            //             type="single"
+            //             collapsible
+            //             value={fundsOpen}
+            //             onValueChange={handleFundsChange}
+            //         >
+            //             <AccordionItem
+            //                 className="border-none"
+            //                 value={ACCORDION_KEYS.FUNDS_IN_ACCOUNTS}
+            //             >
+            //                 <Separator />
+            //                 <AccordionTrigger>
+            //                     <div className="font-semibold">Фонды</div>
+            //                 </AccordionTrigger>
+            //                 <AccordionContent>
+            //                     <AccountFundsList
+            //                         account={account}
+            //                         renderFundCard={(fund) => (
+            //                             <FundCard
+            //                                 name={fund.name}
+            //                                 balance={fund.balance}
+            //                                 color={fund.colorBg}
+            //                                 currencyCode={currencyCode}
+            //                             />
+            //                         )}
+            //                     />
+            //                 </AccordionContent>
+            //             </AccordionItem>
+            //         </Accordion>
+            //     )
+            // }
         />
     )
 }

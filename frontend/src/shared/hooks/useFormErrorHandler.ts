@@ -15,7 +15,6 @@ export function useFormErrorHandler<T extends Record<string, any>>(
                     },
                 )
             } else {
-                console.log(error)
                 setError('root', {
                     message: error.message,
                 })

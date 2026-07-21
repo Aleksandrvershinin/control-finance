@@ -1,8 +1,17 @@
 import { AccountSelect, useSuspenseAccounts } from '@/entities/account'
 
 import { useFormContext } from 'react-hook-form'
-import { FormControl, FormField, FormItem, FormMessage } from '@/shared/ui'
-import { CreateTransactionFormValues } from '../model/createTransactionForm.types'
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/shared/ui'
+import {
+    CreateIncomeExpenseFormValues,
+    CreateTransferFormValues,
+} from '../model/shema'
 
 export const TransactionAccountField = ({
     lable,
@@ -11,10 +20,13 @@ export const TransactionAccountField = ({
     name: 'accountId' | 'toAccountId'
     lable: string
 }) => {
-    const form = useFormContext<CreateTransactionFormValues>()
+    const form = useFormContext<
+        CreateIncomeExpenseFormValues | CreateTransferFormValues
+    >()
     const {
         data: { accounts },
     } = useSuspenseAccounts()
+
     return (
         <FormField
             control={form.control}
@@ -23,7 +35,7 @@ export const TransactionAccountField = ({
                 <FormItem>
                     <FormControl>
                         <AccountSelect
-                            label={lable}
+                            label={<FormLabel>{lable}</FormLabel>}
                             options={accounts.map((acc) => ({
                                 label: acc.name,
                                 value: acc.id,

@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form'
-import { BaseTransactionFormValues } from '../model/baseTransactionForm.types'
+import { BaseTransactionFormValues } from '../model/baseTransactionFormSchema'
 import {
     FormControl,
     FormField,

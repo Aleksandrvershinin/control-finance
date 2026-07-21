@@ -11,7 +11,16 @@ import {
     ValidateIf,
 } from 'class-validator'
 
+enum TransferType {
+    FUNDS = 'FUNDS',
+}
 export class CreateTransactionDto {
+    @IsOptional()
+    @IsEnum(TransferType)
+    transferType?: TransferType
+
+    @ValidateIf((o) => o.transferType !== 'FUNDS')
+    @IsNotEmpty()
     @IsString()
     accountId: string
 
@@ -34,9 +43,12 @@ export class CreateTransactionDto {
     @IsIn(['INCOME', 'EXPENSE', 'TRANSFER'], {
         message: 'Тип должен быть, доход, расход или перевод',
     })
-    type: 'INCOME' | 'EXPENSE' | 'TRANSFER'
+    type: (typeof TransactionType)[keyof typeof TransactionType]
 
-    @ValidateIf((o) => o.type === TransactionType.TRANSFER)
+    @ValidateIf(
+        (o) =>
+            o.type === TransactionType.TRANSFER && o.transferType !== 'FUNDS',
+    )
     @IsNotEmpty()
     @IsString()
     toAccountId: string
