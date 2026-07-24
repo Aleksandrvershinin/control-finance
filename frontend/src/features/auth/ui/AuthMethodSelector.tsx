@@ -35,7 +35,7 @@ export const AuthMethodSelector = ({ children }: Props) => {
                             </span>
                         </div>
                     )}
-                    <Stack spacing={4} className="flex-row sm:flex-col">
+                    <Stack spacing={4} className="flex-col sm:flex-row">
                         <LoadingButton
                             loading={telegramLogin.isPending}
                             onClick={() =>
