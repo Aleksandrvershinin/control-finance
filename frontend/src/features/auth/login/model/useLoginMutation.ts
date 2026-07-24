@@ -58,3 +58,19 @@ export const useLoginByCodeMutation = () => {
         },
     })
 }
+
+export const useLoginTelegramMutation = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (loginData: { initData: string }) => {
+            const { data } = await loginApi.loginTelegram(loginData)
+            return data
+        },
+        onSuccess: (data) => {
+            accessToken.setToken(data.accessToken)
+            queryClient.setQueryData(CURRENT_USER_QUERY_KEY, data.user)
+            queryClient.invalidateQueries()
+        },
+    })
+}

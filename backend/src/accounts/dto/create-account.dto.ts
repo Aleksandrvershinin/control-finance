@@ -9,10 +9,10 @@ import {
 export class CreateAccountDto {
     @IsString()
     @MinLength(2)
-    name: string
+    name!: string
 
     @IsInt()
-    initialBalance: number
+    initialBalance!: number
 
     @IsOptional()
     @IsInt()

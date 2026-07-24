@@ -136,18 +136,13 @@ const createDescriptionColumn = (
 
 const createAmountColumn = (
     renderHeader: (label: string, field: SortProps['field']) => JSX.Element,
-    getAccountById: ReturnType<typeof useGetAccountById>,
     getCurrencyById: ReturnType<typeof useGetCurrencyById>,
     user: CurrentUser | null,
 ): ColumnDef<Transaction> => ({
     id: 'amount',
     header: () => renderHeader('Сумма', 'amount'),
     cell: (info) => {
-        const accountId = info.row.original.accountId
-        const account = accountId ? getAccountById(accountId) : null
-        const currency = getCurrencyById(
-            account?.currencyId ?? user?.currencyId,
-        )
+        const currency = getCurrencyById(user?.currencyId ?? undefined)
         return (
             <div className="font-semibold">
                 {formatCurrency(info.row.original.amount, currency?.code)}
@@ -202,7 +197,7 @@ export const useTransactionColumns = ({
             (transaction) => transaction.categoryId,
         ),
         createDescriptionColumn(renderHeader),
-        createAmountColumn(renderHeader, getAccountById, getCurrencyById, user),
+        createAmountColumn(renderHeader, getCurrencyById, user),
         {
             id: 'actions',
             header: 'Действия',

@@ -1,15 +1,9 @@
-import { Exclude, Expose } from 'class-transformer'
+import { Expose } from 'class-transformer'
 
 export class ResponseUserDto {
     @Expose()
-    id: string
+    id!: string
 
     @Expose()
-    email: string
-
-    @Expose()
-    currencyId: string
-
-    @Exclude()
-    password: string
+    currencyId!: string | null
 }

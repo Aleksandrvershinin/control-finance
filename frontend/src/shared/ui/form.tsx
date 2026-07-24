@@ -173,7 +173,7 @@ FormMessage.displayName = 'FormMessage'
 const FormRootMessage = React.forwardRef<
     HTMLParagraphElement,
     React.HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
     const {
         formState: { errors },
     } = useFormContext()

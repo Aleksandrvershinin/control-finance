@@ -1,12 +1,16 @@
 import {
     emailSchema,
+    linkTelegramSchema,
     passwordSchema,
+    telegramInitDataSchema,
 } from '@/shared/lib/validation/validation.shema'
 import { z } from 'zod'
 
 export const loginByPassFormSchema = z.object({
     email: emailSchema,
     password: passwordSchema,
+    linkTelegram: linkTelegramSchema,
+    telegramInitData: telegramInitDataSchema,
 })
 
 export type LoginByPassFormType = z.infer<typeof loginByPassFormSchema>

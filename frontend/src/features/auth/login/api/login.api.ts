@@ -10,6 +10,7 @@ import { WithRecaptcha } from '@/shared/types/WithRecaptcha'
 import {
     loginByCodeResponseSchema,
     loginByPassResponseSchema,
+    loginTelegramResponseSchema,
     requestLoginCodeResponseSchema,
 } from './loginResponse.types'
 
@@ -37,5 +38,10 @@ export const loginApi = {
         return apiAxios
             .post(`/auth/login/code/confirm`, data, config)
             .then(responseContract(loginByCodeResponseSchema))
+    },
+    loginTelegram(data: { initData: string }) {
+        return apiAxios
+            .post('/auth/login/telegram', data)
+            .then(responseContract(loginTelegramResponseSchema))
     },
 }

@@ -68,8 +68,9 @@ export const FundsWidget = () => {
                                         balance={witoutFund}
                                         color=""
                                         currencyCode={
-                                            getCurrencyById(user?.currencyId)
-                                                .code
+                                            getCurrencyById(
+                                                user?.currencyId ?? undefined,
+                                            ).code
                                         }
                                     />
                                 </div>
@@ -78,8 +79,10 @@ export const FundsWidget = () => {
                             <SortableFundsList
                                 funds={filteredFunds}
                                 isFetching={isFetching}
-                                getCurrencyCode={(currencyId) =>
-                                    getCurrencyById(currencyId).code
+                                currencyCode={
+                                    getCurrencyById(
+                                        user?.currencyId ?? undefined,
+                                    ).code
                                 }
                             />
                         </AccordionContent>

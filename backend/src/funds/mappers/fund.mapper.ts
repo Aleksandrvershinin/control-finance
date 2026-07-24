@@ -17,7 +17,6 @@ export const mapFund = (fund: FundWithExtras) => {
     return {
         ...rest,
         amount,
-        currencyId: user?.currencyId ?? null,
     }
 }
 

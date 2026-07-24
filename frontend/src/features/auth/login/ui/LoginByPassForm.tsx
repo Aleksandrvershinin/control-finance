@@ -20,6 +20,8 @@ import {
 } from '@/shared/ui'
 import { useFormErrorHandler } from '@/shared/hooks/useFormErrorHandler'
 import { useNavigate, useRouter } from '@tanstack/react-router'
+import { telegramService } from '@/shared/lib/telegramService'
+import { Checkbox } from '@/shared/ui/checkbox'
 
 export const fields = [
     {
@@ -40,13 +42,14 @@ export const LoginByPassForm = () => {
     const router = useRouter()
     const navigate = useNavigate()
     const from = router.state.location.state.from
-
+    const hasTelegram = Boolean(telegramService.initData)
     const form = useFormWithRecaptcha<LoginByPassFormType>({
         formProps: {
             resolver: zodResolver(loginByPassFormSchema),
             defaultValues: {
                 email: '',
                 password: '',
+                linkTelegram: hasTelegram,
             },
         },
         action: 'login',
@@ -55,15 +58,21 @@ export const LoginByPassForm = () => {
     const { mutateAsync, isPending } = useLoginByPassMutation()
     const handleError = useFormErrorHandler(form.setError)
     const onSubmit = async (data: WithRecaptcha<LoginByPassFormType>) => {
-        await mutateAsync(data, {
-            onSuccess: () => {
-                navigate({
-                    to: from ?? '/',
-                    replace: true,
-                })
+        await mutateAsync(
+            {
+                ...data,
+                telegramInitData: telegramService.initData,
             },
-            onError: handleError,
-        })
+            {
+                onSuccess: () => {
+                    navigate({
+                        to: from ?? '/',
+                        replace: true,
+                    })
+                },
+                onError: handleError,
+            },
+        )
     }
 
     return (
@@ -101,7 +110,28 @@ export const LoginByPassForm = () => {
                         )}
                     />
                 ))}
+                {hasTelegram && (
+                    <FormField
+                        control={form.control}
+                        name="linkTelegram"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(checked) =>
+                                            field.onChange(Boolean(checked))
+                                        }
+                                    />
+                                </FormControl>
 
+                                <FormLabel className="font-normal">
+                                    Привязать Telegram к аккаунту
+                                </FormLabel>
+                            </FormItem>
+                        )}
+                    />
+                )}
                 <LoadingButton
                     loading={isPending}
                     className="w-full"

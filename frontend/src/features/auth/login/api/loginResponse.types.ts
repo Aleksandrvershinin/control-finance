@@ -19,4 +19,8 @@ export const loginByCodeResponseSchema = z.object({
     accessToken: z.string(),
     user: currentUserResponseSchema.shape.user,
 })
+export const loginTelegramResponseSchema = z.object({
+    accessToken: z.string(),
+    user: currentUserResponseSchema.shape.user,
+})
 export type LoginByCodeResponseData = z.infer<typeof loginByCodeResponseSchema>

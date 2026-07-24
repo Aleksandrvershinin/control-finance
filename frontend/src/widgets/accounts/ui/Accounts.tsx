@@ -40,7 +40,7 @@ export const Accounts = () => {
     const visibleAccounts = filteredAccounts.filter((acc) => !acc.isHidden)
     const hiddenAccounts = accounts.filter((acc) => acc.isHidden)
     const getCurrencyById = useGetCurrencyById()
-    const currency = getCurrencyById(user?.currencyId)
+    const currency = getCurrencyById(user?.currencyId ?? undefined)
     const total = getAccountsTotal(visibleAccounts)
 
     return (

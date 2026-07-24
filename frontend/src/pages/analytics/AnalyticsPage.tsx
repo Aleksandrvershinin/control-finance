@@ -1,5 +1,5 @@
 import { useSuspenseAccounts } from '@/entities/account'
-import { useSuspenseCurrencies } from '@/entities/currency'
+import { useGetCurrencyById } from '@/entities/currency'
 import { useSuspenseFunds } from '@/entities/fund'
 import {
     TransactionAnalytics,
@@ -20,11 +20,9 @@ const formatPercent = (value: number) => `${value.toFixed(1)}%`
 
 export const AnalyticsPage = () => {
     const filterState = useMainFilterStore()
+    const getCurrencyById = useGetCurrencyById()
     const queryParams = transformMainFilterToTransactionQueryDto(filterState)
     const { data: currentUser } = useSuspensCurrentUser()
-    const {
-        data: { currenciesMap },
-    } = useSuspenseCurrencies()
     const {
         data: { accounts },
     } = useSuspenseAccounts()
@@ -32,10 +30,9 @@ export const AnalyticsPage = () => {
         data: { funds },
     } = useSuspenseFunds()
 
-    const currencyCode =
-        (currentUser
-            ? currenciesMap.get(currentUser.currencyId)?.code
-            : undefined) ?? 'USD'
+    const currencyCode = getCurrencyById(
+        currentUser?.currencyId ?? undefined,
+    ).code
 
     const { data, isLoading, isFetching } = useTransactionAnalytics(
         queryParams,

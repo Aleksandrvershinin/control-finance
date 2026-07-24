@@ -3,8 +3,8 @@ import { IsEmail, IsString } from 'class-validator'
 
 export class RequestLoginCodeDto {
     @IsEmail()
-    email: string
+    email!: string
 
     @IsString()
-    recaptchaToken: string
+    recaptchaToken!: string
 }

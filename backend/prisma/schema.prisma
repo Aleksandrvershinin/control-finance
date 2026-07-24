@@ -38,6 +38,11 @@ enum VerificationCodeChannel {
     AUTH_APP
 }
 
+enum AuthProvider {
+    EMAIL
+    TELEGRAM
+}
+
 //////////////////////////////////////////////////////
 // SYSTEM
 //////////////////////////////////////////////////////
@@ -56,24 +61,46 @@ model CodeThrottle {
 //////////////////////////////////////////////////////
 
 model User {
-    id                String    @id @default(uuid())
-    email             String    @unique
-    password          String
+    id         String    @id @default(uuid())
+    currencyId String?
+    currency   Currency? @relation(fields: [currencyId], references: [id])
+
+    accounts    Account[]
+    funds       Fund[]
+    categories  Category[]
+    authMethods AuthMethod[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+//////////////////////////////////////////////////////
+// AuthMethod
+//////////////////////////////////////////////////////
+model AuthMethod {
+    id String @id @default(uuid())
+
+    provider AuthProvider
+
+    /// email или telegram id
+    providerId String
+
+    passwordHash String?
+
     loginCodeHash     String?
     loginCodeExpire   DateTime?
     loginAttempts     Int       @default(0)
     loginBlockedUntil DateTime?
 
-    currencyId String?
-    currency   Currency? @relation(fields: [currencyId], references: [id])
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    accounts          Account[]
-    funds             Fund[]
-    categories        Category[]
     verificationCodes VerificationCode[]
+    createdAt         DateTime           @default(now())
+    updatedAt         DateTime           @updatedAt
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    @@unique([provider, providerId])
+    @@index([userId])
 }
 
 //////////////////////////////////////////////////////
@@ -90,24 +117,31 @@ model Currency {
 }
 
 model VerificationCode {
-    id            String                  @id @default(uuid())
-    type          VerificationCodeType
-    channel       VerificationCodeChannel
-    target        String
-    codeHash      String
-    expireAt      DateTime
-    requestedAt   DateTime                @default(now())
-    consumedAt    DateTime?
-    attemptCount  Int                     @default(0)
+    id String @id @default(uuid())
+
+    type    VerificationCodeType
+    channel VerificationCodeChannel
+    target  String
+
+    codeHash String
+
+    expireAt    DateTime
+    requestedAt DateTime  @default(now())
+    consumedAt  DateTime?
+
+    attemptCount  Int       @default(0)
     lastAttemptAt DateTime?
-    metadata      Json?
-    userId        String?
-    user          User?                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    createdAt     DateTime                @default(now())
-    updatedAt     DateTime                @updatedAt
+
+    metadata Json?
+
+    authMethodId String?
+    authMethod   AuthMethod? @relation(fields: [authMethodId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@unique([type, channel, target])
-    @@index([userId])
+    @@index([authMethodId])
     @@index([expireAt])
     @@index([consumedAt])
 }

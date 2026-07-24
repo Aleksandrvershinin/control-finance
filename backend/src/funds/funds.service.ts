@@ -18,11 +18,6 @@ export class FundsService {
     private fundInclude(): Prisma.FundInclude {
         return {
             balance: true, // Подтягиваем запись из FundBalance
-            user: {
-                select: {
-                    currencyId: true,
-                },
-            },
         }
     }
 
@@ -33,7 +28,7 @@ export class FundsService {
                     ...createFundDto,
                     userId,
                 },
-                include: this.fundInclude(), // Убрали userId из аргументов, он больше не нужен для фильтрации счетов
+                include: this.fundInclude(),
             })
 
             return mapFund(fund)

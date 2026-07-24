@@ -1,13 +1,27 @@
 // dto/confirm-login-code.dto.ts
-import { IsEmail, IsString, Length } from 'class-validator'
+import {
+    IsBoolean,
+    IsEmail,
+    IsOptional,
+    IsString,
+    Length,
+} from 'class-validator'
 
 export class ConfirmLoginCodeDto {
     @IsEmail()
-    email: string
+    email!: string
 
     @Length(6, 6)
-    code: string
+    code!: string
 
     @IsString()
-    recaptchaToken: string
+    recaptchaToken!: string
+
+    @IsString()
+    @IsOptional()
+    telegramInitData?: string
+
+    @IsBoolean()
+    @IsOptional()
+    linkTelegram?: boolean
 }

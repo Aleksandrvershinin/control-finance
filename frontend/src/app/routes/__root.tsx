@@ -8,6 +8,7 @@ import { logError } from '@/shared/lib/utils/logError'
 import { ErrorPage } from '@/pages/error'
 import { queryClient } from '@/shared/lib/utils/queryСlient'
 import { AuthProvider } from '../providers/AuthProvider'
+import { ProfileProvider } from '../providers/ProfileProvider'
 
 export const Route = createRootRoute({
     context: () => ({ queryClient }),
@@ -19,7 +20,9 @@ function RootComponent() {
     return (
         <>
             <AuthProvider>
-                <Outlet />
+                <ProfileProvider>
+                    <Outlet />
+                </ProfileProvider>
             </AuthProvider>
             <TanStackRouterDevtools position="bottom-left" />
         </>

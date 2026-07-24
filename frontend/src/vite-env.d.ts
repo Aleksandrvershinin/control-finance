@@ -1,3 +1,4 @@
+/// <reference types="telegram-web-app" />
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
@@ -6,4 +7,12 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
     readonly env: ImportMetaEnv
+}
+
+declare global {
+    interface Window {
+        Telegram?: {
+            WebApp: Telegram.WebApp
+        }
+    }
 }

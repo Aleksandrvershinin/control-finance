@@ -16,9 +16,13 @@ export const changePasswordApi = {
         data: RequestChangePasswordCodeDto,
         config?: AxiosRequestConfig,
     ) => {
-        return apiAxiosWithAuthToken.post('/users/password/code/request', data, config)
+        return apiAxiosWithAuthToken.post(
+            '/auth/password/code/request',
+            data,
+            config,
+        )
     },
     confirm: (data: ConfirmChangePasswordDto, config?: AxiosRequestConfig) => {
-        return apiAxiosWithAuthToken.patch('/users/password', data, config)
+        return apiAxiosWithAuthToken.patch('/auth/password', data, config)
     },
 }

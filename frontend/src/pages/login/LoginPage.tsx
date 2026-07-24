@@ -1,3 +1,4 @@
+import { AuthMethodSelector } from '@/features/auth'
 import { LoginByCodeForm, LoginByPassForm } from '@/features/auth/login'
 import { Button } from '@/shared/ui'
 import { Stack } from '@/shared/ui/Stack'
@@ -21,7 +22,9 @@ export const LoginPage = () => {
                 </Stack>
             }
         >
-            <LoginPageSwitch />
+            <AuthMethodSelector>
+                <LoginPageSwitch />
+            </AuthMethodSelector>
         </AuthFormLayout>
     )
 }

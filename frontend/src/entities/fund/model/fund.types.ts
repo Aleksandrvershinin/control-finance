@@ -5,7 +5,6 @@ export const fundSchema = z.object({
     name: z.string(),
     colorBg: z.string(),
     order: z.number(),
-    currencyId: z.string(),
     amount: z.number(),
 })
 

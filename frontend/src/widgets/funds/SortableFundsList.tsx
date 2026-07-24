@@ -20,13 +20,13 @@ import { useEffect, useState } from 'react'
 type SortableFundsListProps = {
     funds: FundType[]
     isFetching: boolean
-    getCurrencyCode: (currencyId: string) => string
+    currencyCode: string
 }
 
 export const SortableFundsList = ({
     funds,
     isFetching,
-    getCurrencyCode,
+    currencyCode,
 }: SortableFundsListProps) => {
     const reorderFundsMutation = useReorderFundsMutation()
     const [viewFunds, setViewFunds] = useState(funds)
@@ -70,7 +70,7 @@ export const SortableFundsList = ({
                                 name={fund.name}
                                 balance={fund.amount}
                                 color={fund.colorBg}
-                                currencyCode={getCurrencyCode(fund.currencyId)}
+                                currencyCode={currencyCode}
                             />
                         </SortableFundItem>
                     ))}

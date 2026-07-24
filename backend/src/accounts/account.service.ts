@@ -44,9 +44,6 @@ export class AccountService {
                 },
                 include: {
                     balance: true,
-                    user: {
-                        select: { currencyId: true },
-                    },
                 },
             })
 
@@ -69,9 +66,6 @@ export class AccountService {
             where: { userId },
             include: {
                 balance: true,
-                user: {
-                    select: { currencyId: true },
-                },
             },
             orderBy: { order: 'asc' },
         })
@@ -108,9 +102,6 @@ export class AccountService {
                 where: { id: accountId },
                 include: {
                     balance: true,
-                    user: {
-                        select: { currencyId: true },
-                    },
                 },
             })
 
@@ -128,9 +119,6 @@ export class AccountService {
             },
             include: {
                 balance: true,
-                user: {
-                    select: { currencyId: true },
-                },
             },
         })
 
@@ -171,23 +159,6 @@ export class AccountService {
         return this.findAll(userId)
     }
 
-    // async remove(userId: string, accountId: string) {
-    //     await this.ensureAccount(userId, accountId)
-
-    //     const account = await this.prisma.account.delete({
-    //         where: { id: accountId },
-    //         include: {
-    //             accountFundBalances: {
-    //                 include: { fund: true },
-    //             },
-    //             user: {
-    //                 select: { currencyId: true },
-    //             },
-    //         },
-    //     })
-
-    //     return mapAccount(account)
-    // }
     private async ensureAccount(userId: string, accountId: string) {
         const account = await this.prisma.account.findFirst({
             where: {
@@ -201,21 +172,6 @@ export class AccountService {
         }
 
         return account
-    }
-
-    private async getRequiredCurrency(userId: string) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: userId },
-            include: { currency: true },
-        })
-
-        if (!user?.currency) {
-            throw new InternalServerErrorException(
-                'User currency is not configured',
-            )
-        }
-
-        return user.currency
     }
 
     async getUserAccounts(

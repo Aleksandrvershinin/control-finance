@@ -8,7 +8,6 @@ export function transformCurrentUserResponseToCurrentUser(
 
     return {
         id: user.id,
-        email: user.email,
         currencyId: user.currencyId,
     }
 }

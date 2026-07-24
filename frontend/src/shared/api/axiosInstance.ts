@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { accessToken } from './accessToken.api'
-import { triggerLogout } from './logoutHandler'
 import { normalizeError } from '../lib/errors/normalizeError'
+import { triggerUnauthorized } from './unauthorizedHandler'
 
 export const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL as string
 export const PUBLIC_API_URL = `${PUBLIC_URL}/api`
@@ -79,7 +79,7 @@ apiAxiosWithAuthToken.interceptors.response.use(
                 return apiAxiosWithAuthToken.request(error.config)
             } catch {
                 accessToken.removeToken()
-                await triggerLogout()
+                await triggerUnauthorized()
             }
         }
 

@@ -7,3 +7,5 @@ export const passwordSchema = z
         MIN_PASSWORD_LENGTH,
         `Пароль должен содержать минимум ${MIN_PASSWORD_LENGTH} символов`,
     )
+export const linkTelegramSchema = z.boolean().optional()
+export const telegramInitDataSchema = z.string().optional()

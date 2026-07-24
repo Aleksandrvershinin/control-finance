@@ -2,20 +2,17 @@ import { Expose } from 'class-transformer'
 
 export class ResponseFundDto {
     @Expose()
-    id: string
+    id!: string
 
     @Expose()
-    name: string
+    name!: string
 
     @Expose()
-    colorBg: string
+    colorBg!: string
 
     @Expose()
-    order: string
+    order!: string
 
     @Expose()
-    amount: number
-
-    @Expose()
-    currencyId: string
+    amount!: number
 }

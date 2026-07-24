@@ -7,6 +7,10 @@ import { CURRENT_USER_QUERY_KEY } from './userQueryKeys'
 import { transformCurrentUserResponseToCurrentUser } from '../lib/toCurrentUser'
 
 export const userApi = {
+    updateCurrentUser: (data: { currencyId: string }) => {
+        return apiAxiosWithAuthToken.patch('/users/me', data)
+    },
+
     getCurrentUser: (config?: AxiosRequestConfig) => {
         return apiAxiosWithAuthToken
             .get(`/users/me`, config)

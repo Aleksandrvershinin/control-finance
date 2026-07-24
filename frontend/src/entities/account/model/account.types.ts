@@ -7,7 +7,6 @@ export const accountSchema = z.object({
     isHidden: z.boolean(),
     initialBalance: z.number(),
     balance: z.number().optional(),
-    currencyId: z.string(),
     funds: z
         .object({
             id: z.string(),
@@ -23,7 +22,6 @@ export const createAccountDTOSchema = accountSchema.omit({
     id: true,
     balance: true,
     funds: true,
-    currencyId: true,
     isHidden: true,
 })
 

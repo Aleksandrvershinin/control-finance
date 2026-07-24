@@ -2,23 +2,20 @@ import { Expose } from 'class-transformer'
 
 export class ResponseAccountDto {
     @Expose()
-    id: string
+    id!: string
 
     @Expose()
-    name: string
+    name!: string
 
     @Expose()
-    order: number
+    order!: number
 
     @Expose()
-    balance: number
+    balance!: number
 
     @Expose()
-    initialBalance: number
+    initialBalance!: number
 
     @Expose()
-    isHidden: boolean
-
-    @Expose()
-    currencyId: string
+    isHidden!: boolean
 }

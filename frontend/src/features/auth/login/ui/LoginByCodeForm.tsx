@@ -226,6 +226,12 @@ export const LoginByCodeForm = () => {
     ) => {
         await loginByCodeMutation.mutateAsync(data, {
             onSuccess: () => {
+                setRequestedEmail(null)
+                setResendAvailableAt(null)
+                setResendTimer(0)
+
+                requestForm.reset({ email: '' })
+                codeForm.reset({ email: '', code: '' })
                 navigate({
                     to: from ?? '/',
                     replace: true,

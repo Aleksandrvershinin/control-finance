@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client'
 type AccountWithRelations = Prisma.AccountGetPayload<{
     include: {
         balance: true // Модель AccountBalance
-        user: { select: { currencyId: true } }
     }
 }>
 
@@ -20,6 +19,5 @@ export function mapAccount(account: AccountWithRelations) {
         isHidden: account.isHidden,
         balance: totalBalance,
         initialBalance: account.initialBalance.toNumber(),
-        currencyId: account.user.currencyId,
     }
 }
