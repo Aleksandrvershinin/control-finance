@@ -4,10 +4,14 @@ import { Stack } from '@/shared/ui/Stack'
 import { useLoginTelegramMutation } from '../login'
 import { telegramService } from '@/shared/lib/telegramService'
 import { AlertCircle } from 'lucide-react'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 
 interface Props extends PropsWithChildren {}
 
 export const AuthMethodSelector = ({ children }: Props) => {
+    const navigate = useNavigate()
+    const router = useRouter()
+    const from = router.state.location.state.from
     const telegramLogin = useLoginTelegramMutation()
 
     const initData = telegramService.initData
@@ -35,9 +39,19 @@ export const AuthMethodSelector = ({ children }: Props) => {
                         <LoadingButton
                             loading={telegramLogin.isPending}
                             onClick={() =>
-                                telegramLogin.mutate({
-                                    initData,
-                                })
+                                telegramLogin.mutate(
+                                    {
+                                        initData,
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            navigate({
+                                                to: from ?? '/',
+                                                replace: true,
+                                            })
+                                        },
+                                    },
+                                )
                             }
                         >
                             Войти через Telegram

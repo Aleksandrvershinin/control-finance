@@ -68,19 +68,9 @@ export const useLoginTelegramMutation = () => {
             return data
         },
         onSuccess: (data) => {
-            console.log('1')
-
             accessToken.setToken(data.accessToken)
-
-            console.log('2')
-
             queryClient.setQueryData(CURRENT_USER_QUERY_KEY, data.user)
-
-            console.log('3')
-
             queryClient.invalidateQueries()
-
-            console.log('4')
         },
     })
 }

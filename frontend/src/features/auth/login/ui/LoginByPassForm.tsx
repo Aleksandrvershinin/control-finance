@@ -119,7 +119,7 @@ export const LoginByPassForm = () => {
                                 <FormControl>
                                     <Checkbox
                                         checked={field.value}
-                                        onCheckedChange={(checked) =>
+                                        onCheckedChange={(checked: boolean) =>
                                             field.onChange(Boolean(checked))
                                         }
                                     />
