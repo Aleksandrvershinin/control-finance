@@ -117,6 +117,7 @@ export const LoginByCodeForm = () => {
             defaultValues: {
                 email: restoredState.email ?? '',
                 code: '',
+                linkTelegram: hasTelegram,
             },
         },
         action: 'loginCodeConfirm',

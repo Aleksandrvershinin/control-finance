@@ -57,6 +57,7 @@ export const RegisterForm = () => {
                 currencyId: '',
                 email: '',
                 password: '',
+                linkTelegram: hasTelegram,
             },
         },
         action: 'register',
