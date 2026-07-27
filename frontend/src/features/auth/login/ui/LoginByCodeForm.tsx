@@ -27,6 +27,8 @@ import {
     useLoginByCodeMutation,
     useRequestLoginCodeMutation,
 } from '../model/useLoginMutation'
+import { Checkbox } from '@/shared/ui/checkbox'
+import { telegramService } from '@/shared/lib/telegramService'
 
 const RESEND_TIMEOUT_SECONDS = 120
 const LOGIN_BY_CODE_STORAGE_KEY = 'loginByCodeState'
@@ -39,6 +41,7 @@ const formatSeconds = (totalSeconds: number) => {
 }
 
 export const LoginByCodeForm = () => {
+    const hasTelegram = Boolean(telegramService.initData)
     const restoredState = useMemo(() => {
         if (typeof window === 'undefined') {
             return {
@@ -325,7 +328,28 @@ export const LoginByCodeForm = () => {
                         </FormItem>
                     )}
                 />
+                {hasTelegram && (
+                    <FormField
+                        control={codeForm.control}
+                        name="linkTelegram"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(checked: boolean) =>
+                                            field.onChange(Boolean(checked))
+                                        }
+                                    />
+                                </FormControl>
 
+                                <FormLabel className="font-normal">
+                                    Привязать Telegram к аккаунту
+                                </FormLabel>
+                            </FormItem>
+                        )}
+                    />
+                )}
                 <LoadingButton
                     loading={loginByCodeMutation.isPending}
                     className="w-full"

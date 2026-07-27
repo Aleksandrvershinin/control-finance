@@ -29,6 +29,8 @@ export const confirmLoginCodeFormSchema = z.object({
         .string()
         .trim()
         .regex(/^\d{6}$/, 'Код должен состоять из 6 цифр'),
+    linkTelegram: linkTelegramSchema,
+    telegramInitData: telegramInitDataSchema,
 })
 
 export type ConfirmLoginCodeFormType = z.infer<

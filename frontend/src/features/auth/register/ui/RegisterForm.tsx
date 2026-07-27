@@ -17,6 +17,8 @@ import {
 } from '@/shared/ui'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { CurrencySelectField } from './CurrencySelectField'
+import { telegramService } from '@/shared/lib/telegramService'
+import { Checkbox } from '@/shared/ui/checkbox'
 
 export const fields = [
     {
@@ -43,6 +45,7 @@ export const fields = [
 ] as const
 
 export const RegisterForm = () => {
+    const hasTelegram = Boolean(telegramService.initData)
     const router = useRouter()
     const navigate = useNavigate()
     const from = router.state.location.state.from
@@ -116,6 +119,28 @@ export const RegisterForm = () => {
                     />
                 ))}
                 <CurrencySelectField />
+                {hasTelegram && (
+                    <FormField
+                        control={form.control}
+                        name="linkTelegram"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(checked: boolean) =>
+                                            field.onChange(Boolean(checked))
+                                        }
+                                    />
+                                </FormControl>
+
+                                <FormLabel className="font-normal">
+                                    Привязать Telegram к аккаунту
+                                </FormLabel>
+                            </FormItem>
+                        )}
+                    />
+                )}
                 <LoadingButton
                     loading={isPending}
                     className="w-full"
