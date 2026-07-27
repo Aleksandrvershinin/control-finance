@@ -233,9 +233,9 @@ export const LoginByCodeForm = () => {
                 setRequestedEmail(null)
                 setResendAvailableAt(null)
                 setResendTimer(0)
-
                 requestForm.reset({ email: '' })
                 codeForm.reset({ email: '', code: '' })
+                window.localStorage.removeItem(LOGIN_BY_CODE_STORAGE_KEY)
                 navigate({
                     to: from ?? '/',
                     replace: true,
